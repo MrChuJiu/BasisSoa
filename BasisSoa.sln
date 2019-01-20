@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasisSoa.Api", "BasisSoa.Api\BasisSoa.Api.csproj", "{637071D9-EE50-4B5F-985E-5AB90532CE30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasisSoa.Core", "BasisSoa.Core\BasisSoa.Core.csproj", "{497EF730-A7C7-4656-89A3-13603E4EAA35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasisSoa.Service", "BasisSoa.Service\BasisSoa.Service.csproj", "{8159AF5E-CC5E-4AC6-9BD6-F8564E0612A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasisSoa.Common", "BasisSoa.Common\BasisSoa.Common.csproj", "{ED41E3EC-55EF-453D-AE9D-ECD2EB249EA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasisSoa.Extensions", "BasisSoa.Extensions\BasisSoa.Extensions.csproj", "{B4436ED0-4E47-423E-91B4-3CFE27446E52}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01-应用程序", "01-应用程序", "{1729711F-46B1-4351-BF83-C4D68EE1C56D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03-应用公共", "03-应用公共", "{C4331B82-4674-45BD-8124-0BDF6434CF4A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02-应用服务", "02-应用服务", "{758FAAE0-D979-4FF6-BB65-E2E20F4E7C84}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04-应用扩展", "04-应用扩展", "{769D8D9B-8D2F-4B21-B009-91FDACE58F0C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{637071D9-EE50-4B5F-985E-5AB90532CE30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{637071D9-EE50-4B5F-985E-5AB90532CE30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{637071D9-EE50-4B5F-985E-5AB90532CE30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{637071D9-EE50-4B5F-985E-5AB90532CE30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{497EF730-A7C7-4656-89A3-13603E4EAA35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{497EF730-A7C7-4656-89A3-13603E4EAA35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{497EF730-A7C7-4656-89A3-13603E4EAA35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{497EF730-A7C7-4656-89A3-13603E4EAA35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8159AF5E-CC5E-4AC6-9BD6-F8564E0612A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8159AF5E-CC5E-4AC6-9BD6-F8564E0612A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8159AF5E-CC5E-4AC6-9BD6-F8564E0612A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8159AF5E-CC5E-4AC6-9BD6-F8564E0612A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED41E3EC-55EF-453D-AE9D-ECD2EB249EA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED41E3EC-55EF-453D-AE9D-ECD2EB249EA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED41E3EC-55EF-453D-AE9D-ECD2EB249EA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED41E3EC-55EF-453D-AE9D-ECD2EB249EA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4436ED0-4E47-423E-91B4-3CFE27446E52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4436ED0-4E47-423E-91B4-3CFE27446E52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4436ED0-4E47-423E-91B4-3CFE27446E52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4436ED0-4E47-423E-91B4-3CFE27446E52}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{637071D9-EE50-4B5F-985E-5AB90532CE30} = {1729711F-46B1-4351-BF83-C4D68EE1C56D}
+		{497EF730-A7C7-4656-89A3-13603E4EAA35} = {758FAAE0-D979-4FF6-BB65-E2E20F4E7C84}
+		{8159AF5E-CC5E-4AC6-9BD6-F8564E0612A1} = {758FAAE0-D979-4FF6-BB65-E2E20F4E7C84}
+		{ED41E3EC-55EF-453D-AE9D-ECD2EB249EA8} = {C4331B82-4674-45BD-8124-0BDF6434CF4A}
+		{B4436ED0-4E47-423E-91B4-3CFE27446E52} = {769D8D9B-8D2F-4B21-B009-91FDACE58F0C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {88B8420C-C434-4E31-BDFA-9DAF33510258}
+	EndGlobalSection
+EndGlobal
