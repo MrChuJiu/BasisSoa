@@ -1,0 +1,625 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BasisSoa.Core</name>
+    </assembly>
+    <members>
+        <member name="P:BasisSoa.Core.BaseDbContext.ConnectionString">
+            <summary>
+            连接字符串 
+            Blog.Core
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.BaseDbContext.DbType">
+            <summary>
+            数据库类型 
+            Blog.Core 
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.BaseDbContext.Db">
+            <summary>
+            数据连接对象 
+            Blog.Core 
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.BaseDbContext.Context">
+            <summary>
+            数据库上下文实例（自动关闭连接）
+            Blog.Core 
+            </summary>
+        </member>
+        <member name="M:BasisSoa.Core.BaseDbContext.#ctor">
+            <summary>
+            功能描述:构造函数
+            </summary>
+        </member>
+        <member name="M:BasisSoa.Core.BaseDbContext.Init(System.String,SqlSugar.DbType)">
+            <summary>
+            功能描述:设置初始化参数
+            </summary>
+            <param name="strConnectionString">连接字符串</param>
+            <param name="enmDbType">数据库类型</param>
+        </member>
+        <member name="M:BasisSoa.Core.BaseDbContext.GetEntityDB``1(SqlSugar.SqlSugarClient)">
+            <summary>
+            功能描述:获取数据库处理对象
+            </summary>
+            <param name="db">db</param>
+            <returns>返回值</returns>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.Entity`1.Id">
+            <summary>
+            主键
+            </summary>
+        </member>
+        <member name="M:BasisSoa.Core.Model.Sys.Entity`1.Equals(System.Object)">
+            <summary>
+            重写方法 相等运算
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BasisSoa.Core.Model.Sys.Entity`1.op_Equality(BasisSoa.Core.Model.Sys.Entity{`0},BasisSoa.Core.Model.Sys.Entity{`0})">
+            <summary>
+            重写方法 实体比较 ==
+            </summary>
+            <param name="a">领域实体a</param>
+            <param name="b">领域实体b</param>
+            <returns></returns>
+        </member>
+        <member name="M:BasisSoa.Core.Model.Sys.Entity`1.op_Inequality(BasisSoa.Core.Model.Sys.Entity{`0},BasisSoa.Core.Model.Sys.Entity{`0})">
+            <summary>
+            重写方法 实体比较 !=
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BasisSoa.Core.Model.Sys.Entity`1.GetHashCode">
+            <summary>
+            获取哈希
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BasisSoa.Core.Model.Sys.SysLog">
+            <summary>
+            系统日志表
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysLog.NickName">
+            <summary>
+            Action名称
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysLog.ModuleId">
+            <summary>
+            模块名称
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysLog.Date">
+            <summary>
+            操作时间
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysLog.Result">
+            <summary>
+            执行结果
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysLog.Type">
+            <summary>
+            操作类型
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysLog.Account">
+            <summary>
+            操作人账号
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysLog.Description">
+            <summary>
+            操作描述
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysLog.CreatorUserId">
+            <summary>
+            创建人ID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysLog.CreatorTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:BasisSoa.Core.Model.Sys.SysModule">
+            <summary>
+            系统模块表
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.ParentId">
+            <summary>
+            父ID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.FullName">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.Icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.Layers">
+            <summary>
+            层级
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.UrlAddress">
+            <summary>
+            前台路由
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.ApiUrl">
+            <summary>
+            后台接口(控制器名字)
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.IsMenu">
+            <summary>
+            是不是菜单
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.IsExpand">
+            <summary>
+            是否默认展开
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.DeleteTime">
+            <summary>
+            删除时间
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.DeleteMark">
+            <summary>
+            是否被删除
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.DeleteUserId">
+            <summary>
+            删除人ID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.Description">
+            <summary>
+            说明
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.SortCode">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.EnabledMark">
+            <summary>
+            是否有效
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.CreatorTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModule.CreatorUserId">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModuleAction.ModuleId">
+            <summary>
+            模块ID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModuleAction.ActionName">
+            <summary>
+            方法名称
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModuleAction.RequestMethod">
+            <summary>
+            请求方式
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModuleAction.MethodDescription">
+            <summary>
+            请求描述
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModuleAction.ACL">
+            <summary>
+            ACL权限名称（需要拼接）
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModuleAction.EnabledMark">
+            <summary>
+            是否可用
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModuleAction.CreatorTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysModuleAction.CreatorUserId">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.ParentId">
+            <summary>
+            父级ID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.CategoryId">
+            <summary>
+            集团  公司  部门  小组
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.FullName">
+            <summary>
+            中文名称
+            </summary> 
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.FullNameEn">
+            <summary>
+            英文名称
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.DeleteTime">
+            <summary>
+            删除时间
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.DeleteMark">
+            <summary>
+            是否被删除
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.DeleteUserId">
+            <summary>
+            删除人ID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.SortCode">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.F_EnabledMark">
+            <summary>
+            是否有效
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.CreatorTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.CreatorUserId">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.ShortName">
+            <summary>
+            简称
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.Logo">
+            <summary>
+            LOGO
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.WeChat">
+            <summary>
+            负责人微信
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.RegNo">
+            <summary>
+            工商登记号
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.Layers">
+            <summary>
+            公司位置
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.ChkHead">
+            <summary>
+            支票抬头
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.InvHead">
+            <summary>
+            发票抬头
+            </summary>   
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.Address">
+            <summary>
+            公司地址
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.Website">
+            <summary>
+            公司官网
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.Email">
+            <summary>
+            公司邮箱
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.OrgCode">
+            <summary>
+            机构代码
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.BankNo">
+            <summary>
+            银行账号
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysOrganize.MobilePhone">
+            <summary>
+            公司电话
+            </summary>
+        </member>
+        <member name="T:BasisSoa.Core.Model.Sys.SysRole">
+            <summary>
+            角色表
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRole.ParentId">
+            <summary>
+            父ID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRole.OrganizeId">
+            <summary>
+            组织ID
+            </summary>   
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRole.Category">
+            <summary>
+            类别
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRole.FullName">
+            <summary>
+            中文名称
+            </summary>  
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRole.FullNameEn">
+            <summary>
+            英文名称
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRole.DeleteTime">
+            <summary>
+            删除时间
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRole.DeleteMark">
+            <summary>
+            是否被删除
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRole.DeleteUserId">
+            <summary>
+            删除人ID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRole.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRole.SortCode">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRole.F_EnabledMark">
+            <summary>
+            是否有效
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRole.CreatorTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRole.CreatorUserId">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="T:BasisSoa.Core.Model.Sys.SysRoleAuthorize">
+            <summary>
+            角色模块关系  这块没想后面加扩展所以 就写死了没加类型 
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRoleAuthorize.RoleId">
+            <summary>
+            角色Id
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRoleAuthorize.ModuleId">
+            <summary>
+            模块ID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRoleAuthorize.CreatorTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRoleAuthorize.CreatorUserId">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="T:BasisSoa.Core.Model.Sys.SysRoleAuthorizeAction">
+            <summary>
+             角色权限 关联 Action表
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRoleAuthorizeAction.RoleAuthId">
+            <summary>
+            角色权限ID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRoleAuthorizeAction.ModuleActionId">
+            <summary>
+            ActionID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRoleAuthorizeAction.CreatorTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysRoleAuthorizeAction.CreatorUserId">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="T:BasisSoa.Core.Model.Sys.SysUser">
+            <summary>
+            系统用户表
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.Account">
+            <summary>
+            登录账号
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.RoleId">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.OrganizeId">
+            <summary>
+            组织ID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.HeadIcon">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.WeChat">
+            <summary>
+            微信号
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.Tel">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.Birthday">
+            <summary>
+            生日
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.RealName">
+            <summary>
+            真名
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.Email">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.Token">
+            <summary>
+            用户Token
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.IsAdministrator">
+            <summary>
+            是否管理员（为了功能编辑个人资料中 附带企业信息）
+            </summary>           
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.EnabledMark">
+            <summary>
+            是否可用
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.SortCode">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.CreatorTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUser.CreatorUserId">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUserLogon.UserPassword">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUserLogon.LogOnCount">
+            <summary>
+            登录次数
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUserLogon.MultiUserLogin">
+            <summary>
+            是否允许多用户登录
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUserLogon.UserSecretkey">
+            <summary>
+            用户秘钥
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUserLogon.Language">
+            <summary>
+            系统语言
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUserLogon.Theme">
+            <summary>
+            系统样式
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Core.Model.Sys.SysUserLogon.UserId">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+    </members>
+</doc>

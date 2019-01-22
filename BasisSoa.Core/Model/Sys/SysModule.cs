@@ -86,5 +86,9 @@ namespace BasisSoa.Core.Model.Sys
         /// 创建人
         /// </summary>
         public string CreatorUserId { get; set; }
+
+
+
+
     }
 }

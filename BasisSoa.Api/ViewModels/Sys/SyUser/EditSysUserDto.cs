@@ -1,13 +1,12 @@
-﻿using System;
+﻿using BasisSoa.Api.ViewModels.Sys.SysUserLogon;
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace BasisSoa.Core.Model.Sys
+namespace BasisSoa.Api.ViewModels.Sys
 {
-    /// <summary>
-    /// 系统用户表
-    /// </summary>
-     public class SyUser : Entity<Guid>
+    public class EditSysUserDto
     {
         /// <summary>
         /// 登录账号
@@ -46,18 +45,10 @@ namespace BasisSoa.Core.Model.Sys
         /// 邮箱
         /// </summary>
         public string Email { get; set; }
-
-        /// <summary>
-        /// 用户Token
-        /// </summary>
-        public string Token { get; set; }
-
         /// <summary>
         /// 是否管理员（为了功能编辑个人资料中 附带企业信息）
         /// </summary>           
         public bool IsAdministrator { get; set; }
-
-
         /// <summary>
         /// 描述
         /// </summary>
@@ -70,18 +61,36 @@ namespace BasisSoa.Core.Model.Sys
         /// 排序
         /// </summary>
         public int SortCode { get; set; }
-
-
         /// <summary>
         /// 创建时间
         /// </summary>
-
         public DateTime? CreatorTime { get; set; }
         /// <summary>
         /// 创建人
         /// </summary>
         public string CreatorUserId { get; set; }
 
-    }
 
+
+        /// <summary>
+        /// 密码
+        /// </summary>
+        public string UserPassword { get; set; }
+
+        /// <summary>
+        /// 是否允许多用户登录
+        /// </summary>
+        public bool MultiUserLogin { get; set; }
+        /// <summary>
+        /// 系统语言
+        /// </summary>
+        public string Language { get; set; }
+        /// <summary>
+        /// 系统样式
+        /// </summary>
+        public string Theme { get; set; }
+
+
+
+    }
 }

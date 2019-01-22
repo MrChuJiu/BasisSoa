@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BasisSoa.Api</name>
+    </assembly>
+    <members>
+        <member name="T:BasisSoa.Api.AutoMapper.ViewModelToEntityMappingProfile">
+            <summary>
+            视图模型到实体模型
+            </summary>
+        </member>
+        <member name="T:BasisSoa.Api.Controllers.SysAdmin.LoginController">
+            <summary>
+            登录注册控制器
+            </summary>
+        </member>
+        <member name="M:BasisSoa.Api.Controllers.SysAdmin.LoginController.#ctor(BasisSoa.Extensions.Jwt.PermissionRequirement,BasisSoa.Service.Interfaces.ISysUserService,BasisSoa.Service.Interfaces.ISysUserLogonService,AutoMapper.IMapper)">
+            <summary>
+            初始化
+            </summary>
+            <param name="requirement"></param>
+            <param name="userService"></param>
+        </member>
+        <member name="M:BasisSoa.Api.Controllers.SysAdmin.LoginController.Get(System.String,System.String)">
+            <summary>
+            用户登录
+            </summary>
+            <param name="username">用户名</param>
+            <param name="password">密码</param>
+            <returns></returns>
+        </member>
+        <member name="T:BasisSoa.Api.Controllers.SysAdmin.SysUserController">
+            <summary>
+            用户管理
+            </summary>
+        </member>
+        <member name="M:BasisSoa.Api.Controllers.SysAdmin.SysUserController.Get">
+            <summary>
+            获取用户列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BasisSoa.Api.Controllers.SysAdmin.SysUserController.Post(BasisSoa.Api.ViewModels.Sys.EditSysUserDto)">
+            <summary>
+            添加用户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.SysUserLogon.DetailsSysUserLogonDto.LogOnCount">
+            <summary>
+            登录次数
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.SysUserLogon.EditSysUserLogonDto.UserPassword">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.SysUserLogon.EditSysUserLogonDto.MultiUserLogin">
+            <summary>
+            是否允许多用户登录
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.SysUserLogon.EditSysUserLogonDto.Language">
+            <summary>
+            系统语言
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.SysUserLogon.EditSysUserLogonDto.Theme">
+            <summary>
+            系统样式
+            </summary>
+        </member>
+        <member name="T:BasisSoa.Api.ViewModels.Sys.DetailsSysUserDto">
+            <summary>
+            用户列表数据Dto
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.DetailsSysUserDto.Id">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.DetailsSysUserDto.OrganizeName">
+            <summary>
+            用户组织名称
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.DetailsSysUserDto.RoleName">
+            <summary>
+            用户角色名称
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.DetailsSysUserDto.LogOnCount">
+            <summary>
+            登录次数
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.Account">
+            <summary>
+            登录账号
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.RoleId">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.OrganizeId">
+            <summary>
+            组织ID
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.HeadIcon">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.WeChat">
+            <summary>
+            微信号
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.Tel">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.Birthday">
+            <summary>
+            生日
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.RealName">
+            <summary>
+            真名
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.Email">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.IsAdministrator">
+            <summary>
+            是否管理员（为了功能编辑个人资料中 附带企业信息）
+            </summary>           
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.EnabledMark">
+            <summary>
+            是否可用
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.SortCode">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.CreatorTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.CreatorUserId">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.UserPassword">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.MultiUserLogin">
+            <summary>
+            是否允许多用户登录
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.Language">
+            <summary>
+            系统语言
+            </summary>
+        </member>
+        <member name="P:BasisSoa.Api.ViewModels.Sys.EditSysUserDto.Theme">
+            <summary>
+            系统样式
+            </summary>
+        </member>
+    </members>
+</doc>

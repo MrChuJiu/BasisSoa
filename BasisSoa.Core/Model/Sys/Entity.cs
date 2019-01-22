@@ -10,7 +10,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 主键
         /// </summary>
-        [SugarColumn(IsPrimaryKey = true)] //是主键, 还是标识列
+        [SugarColumn(IsPrimaryKey = true, Length = 64)] //是主键, 还是标识列
         public T Id { get;  set; }
         /// <summary>
         /// 重写方法 相等运算

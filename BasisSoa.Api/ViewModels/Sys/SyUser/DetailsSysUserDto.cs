@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 namespace BasisSoa.Api.ViewModels.Sys
 {
     /// <summary>
-    /// 角色详情
+    /// 用户列表数据Dto
     /// </summary>
-    public class DetailsSysRoleDto:EditSysRoleDto
+    public class DetailsSysUserDto:EditSysUserDto
     {
         /// <summary>
         /// 用户ID
@@ -18,5 +18,14 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// 用户组织名称
         /// </summary>
         public string OrganizeName { get; set; }
+        /// <summary>
+        /// 用户角色名称
+        /// </summary>
+        public string RoleName { get; set; }
+
+        /// <summary>
+        /// 登录次数
+        /// </summary>
+        public int LogOnCount { get; set; }
     }
 }

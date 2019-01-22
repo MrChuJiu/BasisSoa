@@ -4,8 +4,12 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>E:\BasisSoa\BasisSoa.Core\BasisSoa.Core.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="sqlSugarCore" Version="4.9.7.5" />
+    <PackageReference Include="sqlSugarCore" Version="4.9.8.1" />
   </ItemGroup>
 
   <ItemGroup>

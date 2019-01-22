@@ -19,17 +19,6 @@ namespace BasisSoa.Api.Controllers
             sysLogService = new SysLogService();
         }
 
-        // GET api/values
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<string>>> GetAsync()
-        {
-
-            SysLog sysLog = new SysLog();
-
-            await  sysLogService.Add(sysLog);
-            return new string[] { "value1", "value2" };
-        }
-
         // GET api/values/5
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)

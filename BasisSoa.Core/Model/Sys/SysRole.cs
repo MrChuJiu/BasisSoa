@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SqlSugar;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,30 +8,35 @@ namespace BasisSoa.Core.Model.Sys
     /// <summary>
     /// 角色表
     /// </summary>
-    public class SysRole:Entity<Guid>
+    public class SysRole:Entity<string>
     {
         /// <summary>
         /// 父ID
         /// </summary>
+        [SugarColumn(Length = 64)]
         public string ParentId { get; set; }
 
         /// <summary>
         /// 组织ID
-        /// </summary>           
+        /// </summary>   
+        [SugarColumn(Length = 64)]
         public string OrganizeId { get; set; }
 
         /// <summary>
         /// 类别
         /// </summary>
+        [SugarColumn(Length = 64)]
         public string Category { get; set; }
 
         /// <summary>
         /// 中文名称
-        /// </summary>           
+        /// </summary>  
+        [SugarColumn(Length = 64)]
         public string FullName { get; set; }
         /// <summary>
         /// 英文名称
         /// </summary>
+        [SugarColumn(Length = 64)]
         public string FullNameEn { get; set; }
 
 
@@ -45,6 +51,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 删除人ID
         /// </summary>
+        [SugarColumn(Length = 64)]
         public string DeleteUserId { get; set; }
 
 
@@ -52,6 +59,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 描述
         /// </summary>
+        [SugarColumn(Length = 128)]
         public string Description { get; set; }
         /// <summary>
         /// 排序
@@ -60,7 +68,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 是否有效
         /// </summary>
-        public bool F_EnabledMark { get; set; }
+        public bool EnabledMark { get; set; }
 
         /// <summary>
         /// 创建时间
@@ -69,6 +77,15 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 创建人
         /// </summary>
+        [SugarColumn(Length = 64)]
         public string CreatorUserId { get; set; }
+
+
+
+        /// <summary>
+        /// 角色属于哪个组织
+        /// </summary>
+        [SqlSugar.SugarColumn(IsIgnore = true)]
+        public SysOrganize sysOrganize { get; set; }
     }
 }

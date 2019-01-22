@@ -23,7 +23,7 @@ namespace BasisSoa.Service.Implements
             sysLog.Description = description;
             sysLog.CreatorTime = DateTime.Now;
             sysLog.CreatorUserId = modelBeta.Id;
-            await Add(sysLog);
+            await AddAsync(sysLog);
                 
         }
     }

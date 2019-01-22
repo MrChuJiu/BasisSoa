@@ -5,7 +5,11 @@ using System.Threading.Tasks;
 
 namespace BasisSoa.Api.ViewModels.Sys
 {
-    public class DetailsSysOrganizeDto
+    public class DetailsSysOrganizeDto: EditSysOrganizeDto
     {
+        public string Id { get; set; }
+
+
+
     }
 }
