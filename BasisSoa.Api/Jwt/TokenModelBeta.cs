@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace BasisSoa.Extensions.Jwt
+namespace BasisSoa.Api.Jwt
 {
     /// <summary>
-    /// 令牌
+    /// 要存储的参数
     /// </summary>
     public class TokenModelBeta
     {
@@ -28,6 +29,5 @@ namespace BasisSoa.Extensions.Jwt
         /// 令牌类型
         /// </summary>
         public string TokenType { get; set; }
-
     }
 }

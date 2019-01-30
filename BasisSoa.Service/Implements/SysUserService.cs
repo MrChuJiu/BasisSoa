@@ -26,19 +26,20 @@ namespace BasisSoa.Service.Implements
 
             try
             {
-                var userInfo = Db.Queryable<SysUser, SysUserLogon>((user, userlog) => user.Id == userlog.UserId)
-                   .Where((user, userlog) => user.Account == username)
-                   .Select((user, userlog) => new{
-                       user,
-                       userlog
-                   }).First();
+                var userInfo = Db.Queryable<SysUser, SysUserLogon>((sysuser, userlog) => sysuser.Id == userlog.UserId)
+                   .Where((sysuser, userlog) => sysuser.Account == username)
+                   .Select((sysuser, userlog) => new
+                    {
+                       sysuser,
+                        userlog
+                    }).First();
 
                 if (userInfo != null)
                 {
                     password = Md5Crypt.Encrypt(DES3Encrypt.EncryptString(password.ToLower(), userInfo.userlog.UserSecretkey).ToLower(), false).ToLower();
                     if (userInfo.userlog.UserPassword.Equals(password))
                     {
-                        res.data = userInfo.user;
+                        res.data = userInfo.sysuser;
                     }
                     else
                     {

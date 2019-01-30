@@ -30,6 +30,9 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// 英文名称
         /// </summary>
         public string FullNameEn { get; set; }
+
+
+
         /// <summary>
         /// 描述
         /// </summary>
@@ -42,13 +45,9 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// 是否有效
         /// </summary>
         public bool EnabledMark { get; set; }
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime CreatorTime { get; set; }
-        /// <summary>
-        /// 创建人
-        /// </summary>
-        public string CreatorUserId { get; set; }
+
+
+
+
     }
 }

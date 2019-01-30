@@ -15,13 +15,25 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// </summary>
         public string Id { get; set; }
         /// <summary>
-        /// 用户组织名称
+        /// 创建时间
         /// </summary>
-        public string OrganizeName { get; set; }
+        public DateTime? CreatorTime { get; set; }
         /// <summary>
-        /// 用户角色名称
+        /// 创建人
+        /// </summary>
+        public string CreatorUserId { get; set; }
+
+
+
+        /// <summary>
+        /// 角色名称
         /// </summary>
         public string RoleName { get; set; }
+
+        /// <summary>
+        /// 组织名称
+        /// </summary>
+        public string OrganizeName { get; set; }
 
         /// <summary>
         /// 登录次数

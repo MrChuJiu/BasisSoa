@@ -5,11 +5,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using BasisSoa.Api.Jwt;
 using BasisSoa.Api.ViewModels.Sys;
 using BasisSoa.Common.ClientData;
 using BasisSoa.Common.EnumHelper;
 using BasisSoa.Core.Model.Sys;
-using BasisSoa.Extensions.Jwt;
 using BasisSoa.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -30,11 +30,14 @@ namespace BasisSoa.Api.Controllers.SysAdmin
         private readonly ISysUserLogonService _userLogonService;
         private readonly IMapper _mapper;
         private readonly PermissionRequirement _requirement;
+
         /// <summary>
         /// 初始化
         /// </summary>
         /// <param name="requirement"></param>
         /// <param name="userService"></param>
+        /// <param name="userLogonService"></param>
+        /// <param name="mapper"></param>
         public LoginController(PermissionRequirement requirement, ISysUserService userService, ISysUserLogonService userLogonService, IMapper mapper)
         {
             _requirement = requirement;
@@ -63,7 +66,7 @@ namespace BasisSoa.Api.Controllers.SysAdmin
             }
 
             //修改登录信息 
-            var userLogonUp = await _userLogonService.UpdateAsync(c=>new SysUserLogon { LogOnCount = c.LogOnCount +1 }, s => s.UserId == apiResult.data.Id);
+            var userLogonUp = await _userLogonService.UpdateAsync(c=>new SysUserLogon { LogOnCount = c.LogOnCount + 1 }, s => s.Id == apiResult.data.Id);
 
             if (userLogonUp)
             {

@@ -14,10 +14,10 @@ namespace BasisSoa.Core.Model.Sys
         public string ParentId { get; set; }
 
         /// <summary>
-        /// 集团  公司  部门  小组
+        /// 类别 集团  公司  部门  小组
         /// </summary>
         [SugarColumn(Length = 64)]
-        public string CategoryId { get; set; }
+        public string Category { get; set; }
         /// <summary>
         /// 中文名称
         /// </summary> 
@@ -54,16 +54,17 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 描述
         /// </summary>
-        [SugarColumn(Length = 128)]
+        [SugarColumn(Length = 256)]
         public string Description { get; set; }
+        /// <summary>
+        /// 是否有效
+        /// </summary>
+        public bool EnabledMark { get; set; }
         /// <summary>
         /// 排序
         /// </summary>
         public int SortCode { get; set; }
-        /// <summary>
-        /// 是否有效
-        /// </summary>
-        public bool F_EnabledMark { get; set; }
+
 
 
         /// <summary>
@@ -77,7 +78,7 @@ namespace BasisSoa.Core.Model.Sys
         public string CreatorUserId { get; set; }
 
 
-        /////----下面是集团 和 公司的东西
+
         /// <summary>
         /// 简称
         /// </summary>
@@ -86,7 +87,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// LOGO
         /// </summary>
-        [SugarColumn(Length = 1024)]
+        [SugarColumn(Length = 256)]
         public string Logo { get; set; }
         /// <summary>
         /// 负责人微信
@@ -148,7 +149,7 @@ namespace BasisSoa.Core.Model.Sys
         [SugarColumn(Length = 64)]
         public string MobilePhone { get; set; }
 
-        ///-----------------------------      
+      
 
 
 

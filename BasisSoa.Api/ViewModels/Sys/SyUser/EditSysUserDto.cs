@@ -1,11 +1,11 @@
-﻿using BasisSoa.Api.ViewModels.Sys.SysUserLogon;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace BasisSoa.Api.ViewModels.Sys
 {
+
     public class EditSysUserDto
     {
         /// <summary>
@@ -45,10 +45,13 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// 邮箱
         /// </summary>
         public string Email { get; set; }
+
         /// <summary>
         /// 是否管理员（为了功能编辑个人资料中 附带企业信息）
         /// </summary>           
         public bool IsAdministrator { get; set; }
+
+
         /// <summary>
         /// 描述
         /// </summary>
@@ -61,14 +64,13 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// 排序
         /// </summary>
         public int SortCode { get; set; }
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime? CreatorTime { get; set; }
-        /// <summary>
-        /// 创建人
-        /// </summary>
-        public string CreatorUserId { get; set; }
+
+
+
+
+
+
+        //-------------------------额外
 
 
 

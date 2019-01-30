@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BasisSoa.Api.AutoMapper;
+using BasisSoa.Api.Jwt;
 using BasisSoa.Core;
 using BasisSoa.Service.Implements;
 using BasisSoa.Service.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -18,6 +23,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace BasisSoa.Api
@@ -27,11 +33,14 @@ namespace BasisSoa.Api
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-        }//
+        }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        ///  This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
 
@@ -39,8 +48,15 @@ namespace BasisSoa.Api
 
             //系统
             services.AddTransient<ISysLogService, SysLogService>();
-            services.AddTransient<ISysUserLogonService, SysUserLogonService>();
             services.AddTransient<ISysUserService, SysUserService>();
+            services.AddTransient<ISysUserLogonService, SysUserLogonService>();
+            services.AddTransient<ISysOrganizeService, SysOrganizeService>();
+            services.AddTransient<ISysRoleService, SysRoleService>();
+            services.AddTransient<ISysModuleService, SysModuleService>();
+            services.AddTransient<ISysModuleActionService, SysModuleActionService>();
+
+            services.AddTransient<ISysRoleAuthorizeService, SysRoleAuthorizeService>();
+            services.AddTransient<ISysRoleAuthorizeActionService, SysRoleAuthorizeActionService>();
 
             #endregion
 
@@ -68,7 +84,7 @@ namespace BasisSoa.Api
                 {
                     Version = "v1",
                     Title = "BasisSoa API",
-                    Contact = new Contact { Name = "永思科技", Email = "377749229@qq.com", Url = "http://wwww.baidu.com" },
+                    Contact = new Contact { Name = "基础框架", Email = "377749229@qq.com", Url = "http://wwww.baidu.com" },
                     Description = @" <table style='height: 304px; width: 706px;' border='0'>
                                             <tbody>
                                             <tr>
@@ -148,9 +164,77 @@ namespace BasisSoa.Api
             });
             #endregion
 
+
+            #region JWT Token Service
+            //读取配置文件
+            var audienceConfig = Configuration["JwtAuth:Audience"];
+            var issuer = Configuration["JwtAuth:Issuer"];
+            var symmetricKeyAsBase64 = Configuration["JwtAuth:SecurityKey"];
+            var webExp = double.Parse(Configuration["JwtAuth:WebExp"]);
+            var keyByteArray = Encoding.ASCII.GetBytes(symmetricKeyAsBase64);
+            var signingKey = new SymmetricSecurityKey(keyByteArray);
+
+            // 令牌验证参数
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = signingKey,
+                ValidateIssuer = true,
+                ValidIssuer = issuer,//发行人
+                ValidateAudience = true,
+                ValidAudience = audienceConfig,//订阅人
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+                RequireExpirationTime = true,
+
+            };
+            var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+
+            // 如果要数据库动态绑定，这里先留个空，后边处理器里动态赋值
+            var permission = new List<Permission>();
+            // 角色与接口的权限要求参数
+            var permissionRequirement = new PermissionRequirement(
+                "/api/denied",// 拒绝授权的跳转地址（目前无用）
+                permission,
+                ClaimTypes.Role,//基于角色的授权
+                issuer,//发行人
+                audienceConfig,//听众
+                signingCredentials,//签名凭据
+                expiration: TimeSpan.FromSeconds(60 * webExp)//接口的过期时间
+             );
+
+
+            services.AddAuthorization(options =>
+            {
+                // 自定义权限要求
+                options.AddPolicy("Permission",
+                         policy => policy.Requirements.Add(permissionRequirement));
+            })
+            .AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(o =>
+            {
+                o.TokenValidationParameters = tokenValidationParameters;
+
+            });
+
+
+
+            services.AddScoped<IAuthorizationHandler, PermissionHandler>();
+            services.AddSingleton(permissionRequirement);
+
+            #endregion
+
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

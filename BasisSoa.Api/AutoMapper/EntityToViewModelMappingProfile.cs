@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BasisSoa.Api.ViewModels.Sys;
+using BasisSoa.Api.ViewModels.Sys.SysOrganize;
 using BasisSoa.Api.ViewModels.Sys.SysRole;
-using BasisSoa.Api.ViewModels.Sys.SysUserLogon;
 using BasisSoa.Core.Model.Sys;
 using System;
 using System.Collections.Generic;
@@ -10,8 +10,14 @@ using System.Threading.Tasks;
 
 namespace BasisSoa.Api.AutoMapper
 {
+    /// <summary>
+    /// 实体转Dto
+    /// </summary>
     public class EntityToViewModelMappingProfile:Profile
     {
+        /// <summary>
+        /// 初始化
+        /// </summary>
         public EntityToViewModelMappingProfile() {
             //用户配置
             CreateMap<SysUser, EditSysUserDto>();
@@ -26,14 +32,20 @@ namespace BasisSoa.Api.AutoMapper
                   .ForMember(s => s.Theme, opts => opts.MapFrom(src => src.sysUserLogon.Theme));
            
 
+            
+            //组织配置
+            CreateMap<SysOrganize, EditSysOrganizeDto>();
+            CreateMap<SysOrganize, DetailsSysOrganizeDto>();
+            CreateMap<SysOrganize, TreeListSysOrganizeDto>()
+                 .ForMember(s => s.key, ops => ops.MapFrom(src => src.Id))
+                .ForMember(s => s.title, ops => ops.MapFrom(src => src.FullName))
+                .ForMember(s => s.parentId, ops => ops.MapFrom(src => src.ParentId));
 
-            //用户登录信息配置
-            CreateMap<SysUserLogon, EditSysUserLogonDto>();
-            CreateMap<SysUserLogon, DetailsSysUserLogonDto>();
-
-            //角色信息配置
+            //角色配置
+            CreateMap<SysRole, EditSysRoleDto>();
+            CreateMap<SysRole, DetailsSysRoleDto>();
             CreateMap<SysRole, TreeListSysRoleDto>()
-                .ForMember(s => s.key, ops => ops.MapFrom(src => src.Id))
+                  .ForMember(s => s.key, ops => ops.MapFrom(src => src.Id))
                 .ForMember(s => s.title, ops => ops.MapFrom(src => src.FullName))
                 .ForMember(s => s.parentId, ops => ops.MapFrom(src => src.ParentId));
         }

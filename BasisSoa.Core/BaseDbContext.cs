@@ -80,16 +80,23 @@ namespace BasisSoa.Core
                     IsAutoRemoveDataCache = true
                 }
             });
-            //try
-            //{
-            //    Db.CodeFirst.BackupTable().InitTables(typeof(SysUserLogon));
-            
-            //    //Db.CodeFirst.BackupTable().InitTables(typeof(SysLog), typeof(SysUser), typeof(SysOrganize), typeof(SysRole));
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex);
-            //}
+            //调式代码 用来打印SQL 
+            _db.Aop.OnLogExecuting = (sql, pars) =>
+            {
+                Console.WriteLine(sql + "\r\n" +
+                    Db.Utilities.SerializeObject(pars.ToDictionary(it => it.ParameterName, it => it.Value)));
+                Console.WriteLine();
+            };
+            try
+            {
+                //Db.CodeFirst.BackupTable().InitTables(typeof(SysLog), typeof(SysUser), typeof(SysUserLogon),
+                //                                      typeof(SysOrganize), typeof(SysRole), typeof(SysModule),
+                //                                      typeof(SysModuleAction), typeof(SysRoleAuthorize), typeof(SysRoleAuthorizeAction));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
 
         }
 

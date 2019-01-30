@@ -14,6 +14,17 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// 用户ID
         /// </summary>
         public string Id { get; set; }
+
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreatorTime { get; set; }
+        /// <summary>
+        /// 创建人
+        /// </summary>
+        public string CreatorUserId { get; set; }
+
         /// <summary>
         /// 用户组织名称
         /// </summary>

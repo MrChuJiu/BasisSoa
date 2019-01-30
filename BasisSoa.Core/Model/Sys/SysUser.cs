@@ -29,7 +29,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 头像
         /// </summary>
-        [SugarColumn(Length = 1024)]
+        [SugarColumn(Length = 256)]
         public string HeadIcon { get; set; }
         /// <summary>
         /// 微信号
@@ -59,7 +59,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 用户Token
         /// </summary>
-        [SugarColumn(Length = 1024)]
+        [SugarColumn(Length = 256)]
         public string Token { get; set; }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 描述
         /// </summary>
-        [SugarColumn(Length = 128)]
+        [SugarColumn(Length = 256)]
         public string Description { get; set; }
         /// <summary>
         /// 是否可用
@@ -86,7 +86,6 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 创建时间
         /// </summary>
-
         public DateTime? CreatorTime { get; set; }
         /// <summary>
         /// 创建人
@@ -95,12 +94,24 @@ namespace BasisSoa.Core.Model.Sys
         public string CreatorUserId { get; set; }
 
 
+
+        /// <summary>
+        /// 组织数据
+        /// </summary>
         [SqlSugar.SugarColumn(IsIgnore = true)]
         public SysOrganize sysOrganize { get; set; }
 
+
+        /// <summary>
+        /// 角色数据
+        /// </summary>
         [SqlSugar.SugarColumn(IsIgnore = true)]
         public SysRole sysRole { get; set; }
 
+
+        /// <summary>
+        /// 用户登录表数据
+        /// </summary>
         [SqlSugar.SugarColumn(IsIgnore = true)]
         public SysUserLogon sysUserLogon { get; set; }
 

@@ -67,6 +67,12 @@ namespace BasisSoa.Service.Interfaces
         /// <returns></returns>
         Task<bool> UpdateAsync(TEntity model);
 
+        /// <summary>
+        /// 批量添加数据
+        /// </summary>
+        /// <param name="parm">List<T></param>
+        /// <returns></returns>
+        Task<bool> UpdateListAsync(List<TEntity> parm);
 
         /// <summary>
         /// 根据条件更新多个数据
@@ -89,7 +95,7 @@ namespace BasisSoa.Service.Interfaces
         /// <param name="columns"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        Task<bool> UpdateAsync(Expression<Func<TEntity, TEntity>> columns, Expression<Func<TEntity, object>> where);
+        Task<bool> UpdateAsync(Expression<Func<TEntity, TEntity>> columns, Expression<Func<TEntity, bool>> where);
         #endregion
 
         #region  查询

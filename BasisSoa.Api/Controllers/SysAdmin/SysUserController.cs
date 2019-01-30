@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using BasisSoa.Api.Jwt;
 using BasisSoa.Api.ViewModels.Sys;
 using BasisSoa.Common.ClientData;
 using BasisSoa.Common.EncryptionHelper;
 using BasisSoa.Common.EnumHelper;
 using BasisSoa.Core.Model.Sys;
-using BasisSoa.Extensions.Jwt;
 using BasisSoa.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -58,8 +58,7 @@ namespace BasisSoa.Api.Controllers.SysAdmin
 
             ApiResult<string> res = new ApiResult<string>();
             TokenModelBeta token = JwtToken.ParsingJwtToken(HttpContext);
-
-
+            
             //开启事务
             try { 
                 SysUser userInfo = _mapper.Map<SysUser>(Params);
@@ -104,11 +103,14 @@ namespace BasisSoa.Api.Controllers.SysAdmin
                 userInfo.Id = Id;
                 await _userService.UpdateAsync(userInfo);
 
-                SysUserLogon userLogonInfo = _mapper.Map<SysUserLogon>(Params);
-                userLogonInfo.UserId = userInfo.Id;
-                userLogonInfo.UserSecretkey = Md5Crypt.Encrypt(Guid.NewGuid().ToString());
-                userLogonInfo.UserPassword = Md5Crypt.Encrypt(DES3Encrypt.EncryptString(userLogonInfo.UserPassword.ToLower(), userLogonInfo.UserSecretkey).ToLower(), false).ToLower();
-                await _userLogonService.UpdateAsync(userLogonInfo);
+        
+                if (!string.IsNullOrEmpty(Params.UserPassword)) {
+                    SysUserLogon userLogonInfo = _mapper.Map<SysUserLogon>(Params);
+                    userLogonInfo.UserId = Id;
+                    userLogonInfo.UserSecretkey = Md5Crypt.Encrypt(Guid.NewGuid().ToString());
+                    userLogonInfo.UserPassword = Md5Crypt.Encrypt(DES3Encrypt.EncryptString(userLogonInfo.UserPassword.ToLower(), userLogonInfo.UserSecretkey).ToLower(), false).ToLower();
+                    await _userLogonService.UpdateAsync(userLogonInfo);
+                }
 
             }
             catch (Exception ex)

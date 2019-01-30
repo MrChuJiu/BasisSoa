@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SqlSugar;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,43 +8,51 @@ namespace BasisSoa.Core.Model.Sys
     /// <summary>
     /// 系统模块表
     /// </summary>
-    public class SysModule:Entity<Guid>
+    public class SysModule:Entity<string>
     {
         /// <summary>
         /// 父ID
         /// </summary>
+        [SugarColumn(Length = 64)]
         public string ParentId { get; set; }
         /// <summary>
         /// 名称
         /// </summary>
+        [SugarColumn(Length = 64)]
         public string FullName { get; set; }
+
+        /// <summary>
+        /// 英文名称
+        /// </summary>
+        [SugarColumn(Length = 64)]
+        public string FullNameEn { get; set; }
+
         /// <summary>
         /// 图标
         /// </summary>
+        [SugarColumn(Length = 64)]
         public string Icon { get; set; }
-        /// <summary>
-        /// 层级
-        /// </summary>
-        public int? Layers { get; set; }
 
         /// <summary>
         /// 前台路由
         /// </summary>
+        [SugarColumn(Length = 64)]
         public string UrlAddress { get; set; }
         /// <summary>
         /// 后台接口(控制器名字)
         /// </summary>
+        [SugarColumn(Length = 64)]
         public string ApiUrl { get; set; }
 
 
         /// <summary>
         /// 是不是菜单
         /// </summary>
-        public bool? IsMenu { get; set; }
+        public bool IsMenu { get; set; }
         /// <summary>
         /// 是否默认展开
         /// </summary>
-        public bool? IsExpand { get; set; }
+        public bool IsExpand { get; set; }
 
 
         /// <summary>
@@ -57,15 +66,14 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 删除人ID
         /// </summary>
+        [SugarColumn(Length = 64)]
         public string DeleteUserId { get; set; }
-
-
-
 
 
         /// <summary>
         /// 说明
         /// </summary>
+        [SugarColumn(Length = 256)]
         public string Description { get; set; }
         /// <summary>
         /// 排序
@@ -77,7 +85,6 @@ namespace BasisSoa.Core.Model.Sys
         public bool? EnabledMark { get; set; }
 
 
-
         /// <summary>
         /// 创建时间
         /// </summary>
@@ -85,9 +92,16 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 创建人
         /// </summary>
+        [SugarColumn(Length = 64)]
         public string CreatorUserId { get; set; }
 
 
+
+        /// <summary>
+        /// 模块表信息
+        /// </summary>
+        [SqlSugar.SugarColumn(IsIgnore = true)]
+        public List<SysModuleAction> sysModuleActions { get; set; }
 
 
     }

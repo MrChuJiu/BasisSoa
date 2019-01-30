@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using BasisSoa.Api.Jwt;
 using BasisSoa.Api.ViewModels.Sys;
 using BasisSoa.Api.ViewModels.Sys.SysRole;
 using BasisSoa.Common.ClientData;
 using BasisSoa.Common.EnumHelper;
 using BasisSoa.Common.TreeHelper;
 using BasisSoa.Core.Model.Sys;
-using BasisSoa.Extensions.Jwt;
 using BasisSoa.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,7 +41,7 @@ namespace BasisSoa.Api.Controllers.SysAdmin
 
             try
             { 
-                var RoleList = _sysRoleService.QueryAsync();
+                var RoleList = await _sysRoleService.QueryAsync();
                 res.data =  TreeGenerateTools.TreeGroup(_mapper.Map<List<TreeListSysRoleDto>>(RoleList), token.Role);
             }
             catch (Exception ex)
@@ -65,7 +65,7 @@ namespace BasisSoa.Api.Controllers.SysAdmin
 
             try {
 
-                res.data = _mapper.Map<DetailsSysRoleDto>(_sysRoleService.IdAndUserIdQueryModuleAsync(Id, token.Id));
+                res.data = _mapper.Map<DetailsSysRoleDto>( await _sysRoleService.IdAndUserIdQueryModuleAsync(Id, token.Id));
 
             } catch (Exception ex) {
                 res.code = (int)ApiEnum.Error;

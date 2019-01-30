@@ -2,9 +2,10 @@
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace BasisSoa.Extensions.Jwt
+namespace BasisSoa.Api.Jwt
 {
     /// <summary>
     /// 必要参数类，

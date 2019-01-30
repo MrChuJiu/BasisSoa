@@ -122,7 +122,13 @@ namespace BasisSoa.Service.Implements
         /// <returns></returns>
         public async Task<bool> UpdateAsync(TEntity model)
         {
-            var i = await Task.Run( () => db.Updateable<TEntity>(model).ExecuteCommand());
+            var i = await Task.Run( () => db.Updateable<TEntity>(model).IgnoreColumns(ignoreAllNullColumns: true).ExecuteCommand());
+            return i > 0;
+        }
+        public async Task<bool> UpdateListAsync(List<TEntity> parm)
+        {
+            var i = await Task.Run(() => db.Updateable(parm.ToArray()).ExecuteCommand());
+            //返回的i是long类型,这里你可以根据你的业务需要进行处理
             return i > 0;
         }
         /// <summary>
@@ -153,9 +159,10 @@ namespace BasisSoa.Service.Implements
         /// <param name="columns"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        public async Task<bool> UpdateAsync(Expression<Func<TEntity, TEntity>> columns, Expression<Func<TEntity, object>> where)
+        public async Task<bool> UpdateAsync(Expression<Func<TEntity, TEntity>> columns, Expression<Func<TEntity, bool>> where)
         {
-            var i = await Task.Run(() => db.Updateable<TEntity>().UpdateColumns(columns).WhereColumns(where).ExecuteCommand());
+            //需要注意 当WhereColumns和UpdateColumns一起用时，需要把wherecolumns中的列加到UpdateColumns中
+            var i = await Task.Run(() => db.Updateable<TEntity>().UpdateColumns(columns).Where(where).ExecuteCommand());
             return i > 0;
 
 
@@ -226,6 +233,8 @@ namespace BasisSoa.Service.Implements
         {
             return await Task.Run(() => db.Queryable<TEntity>().OrderByIF(strOrderByFileds != null, strOrderByFileds).WhereIF(whereExpression != null, whereExpression).ToPageList(intPageIndex, intPageSize));
         }
+
+
         #endregion
     }
 }

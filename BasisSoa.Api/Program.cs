@@ -16,10 +16,14 @@ namespace BasisSoa.Api
         public static void Main(string[] args)
         {
 
+            //Console.WriteLine(Directory.GetCurrentDirectory());
+            //Console.WriteLine(AppContext.BaseDirectory);
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true)
                 .Build();
+
+
             ConfigManager.SetConfiguration(config);
 
             CreateWebHostBuilder(args).Build().Run();

@@ -10,6 +10,13 @@ namespace BasisSoa.Core.Model.Sys
     /// </summary>
     public class SysLog:Entity<string>
     {
+
+        /// <summary>
+        /// 操作人账号
+        /// </summary>
+        [SugarColumn(Length = 64)]
+        public string Account { get; set; }
+
         /// <summary>
         /// Action名称
         /// </summary>
@@ -19,35 +26,22 @@ namespace BasisSoa.Core.Model.Sys
         /// 模块名称
         /// </summary>
         [SugarColumn(Length = 64)]
-        public string ModuleId { get; set; }
-        /// <summary>
-        /// 操作时间
-        /// </summary>
-        public DateTime Date { get; set; }
+        public string ModuleName { get; set; }
+
         /// <summary>
         /// 执行结果
         /// </summary>
-        public bool Result { get; set; }
-
-        /// <summary>
-        /// 操作类型
-        /// </summary>
         [SugarColumn(Length = 64)]
-        public string Type { get; set; }
-        /// <summary>
-        /// 操作人账号
-        /// </summary>
-        [SugarColumn(Length = 64)]
-        public string Account { get; set; }
-
-
-
+        public string Result { get; set; }
 
         /// <summary>
-        /// 操作描述
+        /// 执行结果
         /// </summary>
-        [SugarColumn(Length = 128)]
-        public string Description { get; set; }
+        [SugarColumn(Length = 2048)]
+        public string ResultData { get; set; }
+
+     
+  
         /// <summary>
         /// 创建人ID
         /// </summary>

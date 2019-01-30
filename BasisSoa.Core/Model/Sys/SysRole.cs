@@ -59,7 +59,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 描述
         /// </summary>
-        [SugarColumn(Length = 128)]
+        [SugarColumn(Length = 256)]
         public string Description { get; set; }
         /// <summary>
         /// 排序
@@ -69,6 +69,9 @@ namespace BasisSoa.Core.Model.Sys
         /// 是否有效
         /// </summary>
         public bool EnabledMark { get; set; }
+
+
+
 
         /// <summary>
         /// 创建时间
