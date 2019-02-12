@@ -15,7 +15,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BasisSoa.Api.Controllers.SysAdmin
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
+    [ApiController]
     public class SysModuleController : Controller
     {
 
@@ -45,7 +47,7 @@ namespace BasisSoa.Api.Controllers.SysAdmin
 
 
             try {
-                var ModuleList = _sysModuleService.QueryAsync();
+                var ModuleList = await  _sysModuleService.QueryAsync(s=>s.DeleteMark == false && s.EnabledMark == true);
                 res.data = TreeGenerateTools.TreeGroup(_mapper.Map<List<TreeListSysModuleDto>>(ModuleList), token.Role);
             }
             catch (Exception ex) {
@@ -69,8 +71,8 @@ namespace BasisSoa.Api.Controllers.SysAdmin
 
             try
             {
-                res.data = _mapper.Map<DetailsSysModuleDto>(_sysModuleService.QueryByIDAsync(Id));
-                res.data.SysModuleActionDtos = _mapper.Map<List<DetailsSysModuleActionDto>>(_sysModuleActionService.QueryAsync(s => s.ModuleId == Id));
+                res.data = _mapper.Map<DetailsSysModuleDto>(await _sysModuleService.QuerySysModuleByIDAsync(Id));
+                res.data.SysModuleActionDtos = _mapper.Map<List<DetailsSysModuleActionDto>>(await _sysModuleActionService.QueryAsync(s => s.ModuleId == Id));
             }
             catch (Exception ex)
             {
@@ -94,22 +96,34 @@ namespace BasisSoa.Api.Controllers.SysAdmin
                 SysModule sysModuleInfo = _mapper.Map<SysModule>(Params);
                 sysModuleInfo.CreatorTime = DateTime.Now;
                 sysModuleInfo.CreatorUserId = token.Id;
+                sysModuleInfo.Id = Guid.NewGuid().ToString();
+                sysModuleInfo.DeleteMark = false;
                 var IsSuccess = await _sysModuleService.AddAsync(sysModuleInfo);
                 if (!IsSuccess)
                 {
                     res.code = (int)ApiEnum.Failure;
                     res.message = "错误：添加模块失败";
                 }
+
                 //添加模块请求
+                List<SysModuleAction> AddsysModuleActionList = _mapper.Map<List<SysModuleAction>>(Params.SysModuleActionDtos.Where(s => s.Id == null));
+                if (AddsysModuleActionList.Count() > 0) {
+                    foreach (var item in AddsysModuleActionList)
+                    {
+                        item.Id = Guid.NewGuid().ToString();
+                        item.ModuleId = sysModuleInfo.Id;
+                        item.CreatorTime = DateTime.Now;
+                        item.CreatorUserId = token.Id;
+                    }
+                    IsSuccess = await _sysModuleActionService.AddListAsync(AddsysModuleActionList);
+                    if (!IsSuccess)
+                    {
+                        res.code = (int)ApiEnum.Failure;
+                        res.message = "错误：添加模块失败";
+                    }
 
-                List<SysModuleAction> sysModuleActionList = _mapper.Map<List<SysModuleAction>>(Params.SysModuleActionDtos);
-                IsSuccess = await _sysModuleActionService.AddListAsync(sysModuleActionList);
-
-                if (!IsSuccess)
-                {
-                    res.code = (int)ApiEnum.Failure;
-                    res.message = "错误：添加模块失败";
                 }
+              
 
             } catch (Exception ex) {
                 res.code = (int)ApiEnum.Error;
@@ -122,10 +136,10 @@ namespace BasisSoa.Api.Controllers.SysAdmin
         /// <summary>
         /// 修改模块
         /// </summary>
-        [HttpPut]
+        [HttpPut("{Id}")]
         public async Task<ApiResult<string>> Put(string Id,EditSysModuleDto Params) {
             ApiResult<string> res = new ApiResult<string>();
-
+            TokenModelBeta token = JwtToken.ParsingJwtToken(HttpContext);
             try
             {
                 //添加模块
@@ -138,23 +152,44 @@ namespace BasisSoa.Api.Controllers.SysAdmin
                     res.message = "错误：修改模块失败";
                 }
 
-                //添加模块请求
-                List<SysModuleAction> AddsysModuleActionList = _mapper.Map<List<SysModuleAction>>(Params.SysModuleActionDtos.Where(s=>s.Id == ""));
-                IsSuccess = await _sysModuleActionService.AddListAsync(AddsysModuleActionList);
-                if (!IsSuccess)
-                {
-                    res.code = (int)ApiEnum.Failure;
-                    res.message = "错误：添加模块失败";
-                }
+                List<string> ModuleIds = new List<string>();
+
                 //修改模块数据
-                List<SysModuleAction>  EditsysModuleActionList = _mapper.Map<List<SysModuleAction>>(Params.SysModuleActionDtos.Where(s => s.Id != ""));
-                IsSuccess = await _sysModuleActionService.UpdateListAsync(EditsysModuleActionList);
-                if (!IsSuccess)
+                List<SysModuleAction> EditsysModuleActionList = _mapper.Map<List<SysModuleAction>>(Params.SysModuleActionDtos.Where(s => s.Id != null));
+                if (EditsysModuleActionList.Count() > 0)
                 {
-                    res.code = (int)ApiEnum.Failure;
-                    res.message = "错误：修改模块失败";
+                    IsSuccess = await _sysModuleActionService.UpdateListAsync(EditsysModuleActionList);
+                    if (!IsSuccess)
+                    {
+                        res.code = (int)ApiEnum.Failure;
+                        res.message = "错误：修改模块失败";
+                    }
+                    ModuleIds.AddRange(EditsysModuleActionList.Select(s => s.Id).ToList());
+                }
+             
+
+                //添加模块请求
+                List<SysModuleAction> AddsysModuleActionList = _mapper.Map<List<SysModuleAction>>(Params.SysModuleActionDtos.Where(s=>s.Id == null));
+                if (AddsysModuleActionList.Count() > 0)
+                {
+                    foreach (var item in AddsysModuleActionList)
+                    {
+                        item.Id = Guid.NewGuid().ToString();
+                        item.ModuleId = sysModuleInfo.Id;
+                        item.CreatorTime = DateTime.Now;
+                        item.CreatorUserId = token.Id;
+                    }
+                    IsSuccess = await _sysModuleActionService.AddListAsync(AddsysModuleActionList);
+                    if (!IsSuccess)
+                    {
+                        res.code = (int)ApiEnum.Failure;
+                        res.message = "错误：添加模块失败";
+                    }
+                    ModuleIds.AddRange(AddsysModuleActionList.Select(s => s.Id).ToList());
                 }
 
+                //删除不存在的模块请求
+                await _sysModuleActionService.DeleteAsync(s => s.ModuleId == sysModuleInfo.Id && !ModuleIds.Contains(s.Id));
             }
             catch (Exception ex) {
                 res.code = (int)ApiEnum.Error;

@@ -17,7 +17,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BasisSoa.Api.Controllers.SysAdmin
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
+    [ApiController]
     public class SysOrganizeController : Controller
     {
 
@@ -65,7 +67,7 @@ namespace BasisSoa.Api.Controllers.SysAdmin
 
             try
             {
-                res.data = _mapper.Map<DetailsSysOrganizeDto>(await _sysOrganizeService.QueryByIDAsync(Id));
+                res.data = _mapper.Map<DetailsSysOrganizeDto>(await _sysOrganizeService.QuerySysOrganizeByIDAsync(Id));
             }
             catch (Exception ex)
             {
@@ -91,6 +93,8 @@ namespace BasisSoa.Api.Controllers.SysAdmin
                 SysOrganize sysOrganizeInfo = _mapper.Map<SysOrganize>(Params);
                 sysOrganizeInfo.CreatorTime = DateTime.Now;
                 sysOrganizeInfo.CreatorUserId = token.Id;
+                sysOrganizeInfo.Id = Guid.NewGuid().ToString();
+                sysOrganizeInfo.DeleteMark = false;
                 var IsSuccess = await _sysOrganizeService.AddAsync(sysOrganizeInfo);
                 if (!IsSuccess)
                 {
@@ -115,7 +119,7 @@ namespace BasisSoa.Api.Controllers.SysAdmin
         /// <param name="Id"></param>
         /// <param name="Params"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPut("{Id}")]
         public async Task<ApiResult<string>> Put(string Id, EditSysOrganizeDto Params) {
 
             ApiResult<string> res = new ApiResult<string>();

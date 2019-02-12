@@ -26,20 +26,18 @@ namespace BasisSoa.Service.Implements
 
             try
             {
-                var userInfo = Db.Queryable<SysUser, SysUserLogon>((sysuser, userlog) => sysuser.Id == userlog.UserId)
-                   .Where((sysuser, userlog) => sysuser.Account == username)
-                   .Select((sysuser, userlog) => new
-                    {
-                       sysuser,
-                        userlog
-                    }).First();
+
+                var userInfo = await Db.Queryable<SysUser>()
+                      .Where(s => s.Account == username)
+                      .Mapper(it => it.sysUserLogon, it => it.sysUserLogon.UserId)
+                      .FirstAsync();
 
                 if (userInfo != null)
                 {
-                    password = Md5Crypt.Encrypt(DES3Encrypt.EncryptString(password.ToLower(), userInfo.userlog.UserSecretkey).ToLower(), false).ToLower();
-                    if (userInfo.userlog.UserPassword.Equals(password))
+                    password = Md5Crypt.Encrypt(DES3Encrypt.EncryptString(password.ToLower(), userInfo.sysUserLogon.UserSecretkey).ToLower(), false).ToLower();
+                    if (userInfo.sysUserLogon.UserPassword.Equals(password))
                     {
-                        res.data = userInfo.sysuser;
+                        res.data = userInfo;
                     }
                     else
                     {
@@ -58,7 +56,7 @@ namespace BasisSoa.Service.Implements
                 res.message = ApiEnum.Error.GetEnumText() + ex.Message;
                 res.code = (int)ApiEnum.Error;
             }
-            return await Task.Run(() => res);
+            return res;
         }
         /// <summary>
         /// 获取用户列表（带有自身权限）
@@ -67,15 +65,16 @@ namespace BasisSoa.Service.Implements
         public async Task<ApiResult<List<SysUser>>> UserQueryAsync()
         {
             var res = new ApiResult<List<SysUser>>();
-
+            res.data = new List<SysUser>();
             try
             {
                 
-                var list = Db.Queryable<SysUser>()
+                var list = await Db.Queryable<SysUser>()
+                      .Mapper(it => it.sysUser, it => it.CreatorId)
                       .Mapper(it => it.sysOrganize, it => it.OrganizeId)
                       .Mapper(it => it.sysRole, it => it.RoleId)
                       .Mapper(it => it.sysUserLogon, it => it.sysUserLogon.UserId) //主表根据字表存的id来查
-                      .ToList();
+                      .ToListAsync();
 
                 res.data = list;
             }
@@ -83,7 +82,30 @@ namespace BasisSoa.Service.Implements
             {
                 Console.WriteLine(ex);
             }
-            return await Task.Run(() => res);
+            return res;
+        }
+        /// <summary>
+        /// 获取用户列表（带有自身权限）
+        /// </summary>
+        /// <returns></returns>
+        public async Task<SysUser> QueryAsyncById(string Id)
+        {
+            var res = new SysUser();
+
+            try
+            {
+                 res = await Db.Queryable<SysUser>()
+                      .Where(s=>s.Id == Id)
+                      .Mapper(it => it.sysOrganize, it => it.OrganizeId)
+                      .Mapper(it => it.sysRole, it => it.RoleId)
+                      .Mapper(it => it.sysUserLogon, it => it.sysUserLogon.UserId) //主表根据字表存的id来查
+                      .FirstAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return res;
         }
     }
 }

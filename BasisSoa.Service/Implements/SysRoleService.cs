@@ -15,11 +15,15 @@ namespace BasisSoa.Service.Implements
         /// <param name="Id"></param>
         /// <param name="UserId"></param>
         /// <returns></returns>
-        public async Task<SysRole> IdAndUserIdQueryModuleAsync(string Id, string UserId)
+        public async Task<SysRole> QuerySysModuleByIdAndUserIdAsync(string Id, string UserId)
         {
-            var res = Db.Queryable<SysRole>().Mapper(s => s.sysOrganize, s => s.OrganizeId).First();
+            var res = await Db.Queryable<SysRole>()
+                .Where(s => s.Id == Id)
+                .Mapper(it => it.sysUser, it => it.CreatorUserId)
+                .Mapper(s => s.sysOrganize, s => s.OrganizeId)
+                .FirstAsync();
 
-            return await Task.Run( () => res);
+            return res;
         }
     }
 }

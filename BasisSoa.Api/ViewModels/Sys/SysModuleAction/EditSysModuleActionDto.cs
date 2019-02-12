@@ -20,10 +20,6 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// </summary>
         public string RequestMethod { get; set; }
         /// <summary>
-        /// 请求描述
-        /// </summary>
-        public string MethodDescription { get; set; }
-        /// <summary>
         /// ACL权限名称（需要拼接）
         /// </summary>
         public string ACL { get; set; }

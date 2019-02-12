@@ -68,7 +68,7 @@ namespace BasisSoa.Core
                 ConnectionString = _connectionString,
                 DbType = _dbType,
                 IsAutoCloseConnection = true,
-                IsShardSameThread = true,
+                IsShardSameThread = false,
                 InitKeyType = InitKeyType.Attribute,
                 ConfigureExternalServices = new ConfigureExternalServices()
                 {

@@ -14,24 +14,24 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 操作人账号
         /// </summary>
-        [SugarColumn(Length = 64)]
+        [SugarColumn(Length = 64,IsNullable = true)]
         public string Account { get; set; }
 
         /// <summary>
         /// Action名称
         /// </summary>
-        [SugarColumn(Length = 64)]
+         [SugarColumn(Length = 64,IsNullable = true)]
         public string NickName { get; set; }
         /// <summary>
         /// 模块名称
         /// </summary>
-        [SugarColumn(Length = 64)]
+         [SugarColumn(Length = 64,IsNullable = true)]
         public string ModuleName { get; set; }
 
         /// <summary>
         /// 执行结果
         /// </summary>
-        [SugarColumn(Length = 64)]
+         [SugarColumn(Length = 64,IsNullable = true)]
         public string Result { get; set; }
 
         /// <summary>
@@ -45,11 +45,11 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 创建人ID
         /// </summary>
-        [SugarColumn(Length = 64)]
+         [SugarColumn(Length = 64,IsNullable = true)]
         public string CreatorUserId { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime CreatorTime { get; set; }
+        public DateTime? CreatorTime { get; set; }
     }
 }

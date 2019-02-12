@@ -257,6 +257,7 @@ namespace BasisSoa.Api
             });
             //认证
             app.UseAuthentication();
+            app.UseCors("AllowAll");
 
             app.UseHttpsRedirection();
             app.UseMvc();

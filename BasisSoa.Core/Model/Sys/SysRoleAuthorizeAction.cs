@@ -13,12 +13,12 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 角色权限ID
         /// </summary>
-        [SugarColumn(Length = 64)]
+          [SugarColumn(Length = 64,IsNullable = true)]
         public string RoleAuthId {get;set;}
         /// <summary>
         /// ActionID
         /// </summary>
-        [SugarColumn(Length = 64)]
+          [SugarColumn(Length = 64,IsNullable = true)]
         public string ModuleActionId { get; set; }
 
 
@@ -26,11 +26,11 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime CreatorTime { get; set; }
+        public DateTime? CreatorTime { get; set; }
         /// <summary>
         /// 创建人
         /// </summary>
-        [SugarColumn(Length = 64)]
+          [SugarColumn(Length = 64,IsNullable = true)]
         public string CreatorUserId { get; set; }
 
 

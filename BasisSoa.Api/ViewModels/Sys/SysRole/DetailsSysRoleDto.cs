@@ -24,6 +24,10 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// 创建人
         /// </summary>
         public string CreatorUserId { get; set; }
+        /// <summary>
+        /// 创建人名称
+        /// </summary>
+        public string CreatorUserName { get; set; }
 
         /// <summary>
         /// 用户组织名称

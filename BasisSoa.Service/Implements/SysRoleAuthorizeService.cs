@@ -17,12 +17,12 @@ namespace BasisSoa.Service.Implements
         {
             List<SysRoleAuthorize> res = new List<SysRoleAuthorize>();
 
-            res = Db.Queryable<SysRoleAuthorize>()
+            res = await Db.Queryable<SysRoleAuthorize>()
                 .Mapper(it => it.sysRole, it => it.RoleId)
                 .Mapper(it => it.sysModule, it => it.ModuleId)
-                 .ToList();
+                .ToListAsync();
 
-            return await Task.Run( () => res);
+            return res;
         }
     }
 }

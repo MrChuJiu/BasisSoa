@@ -14,6 +14,6 @@ namespace BasisSoa.Service.Interfaces
         /// <param name="Id"></param>
         /// <param name="UserId"></param>
         /// <returns></returns>
-        Task<SysRole> IdAndUserIdQueryModuleAsync(string Id,string UserId);
+        Task<SysRole> QuerySysModuleByIdAndUserIdAsync(string Id,string UserId);
     }
 }

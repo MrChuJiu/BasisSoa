@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// <summary>
         /// 登录账号
         /// </summary>
+        //[SearchAttribute("Account", Symbol.等于)]
         public string Account { get; set; }
         /// <summary>
         /// 角色ID

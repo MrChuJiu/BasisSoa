@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BasisSoa.Api.Jwt;
 using BasisSoa.Api.ViewModels.Sys;
+using BasisSoa.Api.ViewModels.Sys.SyUser;
 using BasisSoa.Common.ClientData;
 using BasisSoa.Common.EncryptionHelper;
 using BasisSoa.Common.EnumHelper;
@@ -38,14 +39,29 @@ namespace BasisSoa.Api.Controllers.SysAdmin
         }
 
         /// <summary>
-        /// 获取用户列表
+        /// 获取用户列表  PageSysUserDto
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<AngularSTResult<DetailsSysUserDto>> Get() {
+        public async Task<AngularSTResult<DetailsSysUserDto>> Get(int pi,int ps) {
+           
+          
             AngularSTResult<DetailsSysUserDto> res = new AngularSTResult<DetailsSysUserDto>();
-            var test = await _userService.UserQueryAsync();
-            res.list = _mapper.Map<List<DetailsSysUserDto>>(test.data);
+            //SearchClass<SysUser,EditSysUserDto>.GetWhereLambda(Params)
+            var userList = await _userService.QueryPageAsync(null,pi,ps,s=>s.CreatorTime,true);
+            res.list = _mapper.Map<List<DetailsSysUserDto>>(userList);
+            return await Task.Run(() => res);
+        }
+
+        /// <summary>
+        /// 获取用户详情
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetUserDetails")]
+        public async Task<ApiResult<DetailsSysUserDto>> GetUserDetails(string Id)
+        {
+            ApiResult<DetailsSysUserDto> res = new ApiResult<DetailsSysUserDto>();
+            res.data = _mapper.Map<DetailsSysUserDto>(await _userService.QueryAsyncById(Id));
             return await Task.Run(() => res);
         }
 
@@ -64,7 +80,7 @@ namespace BasisSoa.Api.Controllers.SysAdmin
                 SysUser userInfo = _mapper.Map<SysUser>(Params);
                 userInfo.Id = Guid.NewGuid().ToString();
                 userInfo.CreatorTime = DateTime.Now;
-                userInfo.CreatorUserId = token.Id;
+                userInfo.CreatorId = token.Id;
                 await _userService.AddAsync(userInfo);
 
                 SysUserLogon userLogonInfo = _mapper.Map<SysUserLogon>(Params);
@@ -91,7 +107,7 @@ namespace BasisSoa.Api.Controllers.SysAdmin
         /// <param name="Id"></param>
         /// <param name="Params"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPut("{Id}")]
         public async Task<ApiResult<string>> Put(string Id,EditSysUserDto Params) {
             ApiResult<string> res = new ApiResult<string>();
 

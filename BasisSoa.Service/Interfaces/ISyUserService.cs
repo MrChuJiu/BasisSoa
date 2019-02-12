@@ -19,5 +19,8 @@ namespace BasisSoa.Service.Interfaces
 
         Task<ApiResult<List<SysUser>>> UserQueryAsync();
 
+
+        Task<SysUser> QueryAsyncById(string Id);
+
     }
 }

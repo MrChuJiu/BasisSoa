@@ -27,6 +27,10 @@ namespace BasisSoa.Api.ViewModels.Sys
 
 
 
+        /// <summary>
+        /// 是否默认展开
+        /// </summary>
+        public bool IsExpand { get; set; }
 
 
 

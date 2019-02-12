@@ -26,16 +26,22 @@ namespace BasisSoa.Api.AutoMapper
             //用户登录信息配置
             CreateMap<EditSysUserDto, SysUserLogon>();
 
-
             //组织配置
             CreateMap<EditSysOrganizeDto, SysOrganize>();
             CreateMap<DetailsSysOrganizeDto, SysOrganize>();
-            CreateMap<TreeListSysOrganizeDto, SysOrganize>();
 
             //角色配置
             CreateMap<EditSysRoleDto, SysRole>();
             CreateMap<DetailsSysRoleDto, SysRole>();
-            CreateMap<TreeListSysRoleDto, SysRole>();
+
+            //模块配置
+            CreateMap<EditSysModuleDto, SysModule>();
+            CreateMap<DetailsSysModuleDto, SysModule>();
+
+
+            //模块按钮配置
+            CreateMap<EditSysModuleActionDto, SysModuleAction>();
+            CreateMap<DetailsSysModuleActionDto, SysModuleAction>();
 
         }
     }

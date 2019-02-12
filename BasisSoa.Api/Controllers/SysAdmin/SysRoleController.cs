@@ -34,14 +34,14 @@ namespace BasisSoa.Api.Controllers.SysAdmin
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetRoleTreeList")]
-        public async Task<ApiResult<List<TreeListSysRoleDto>>> GetRoleTreeList() {
+        public async Task<ApiResult<List<TreeListSysRoleDto>>> GetRoleTreeList(string Id) {
             ApiResult<List<TreeListSysRoleDto>> res = new ApiResult<List<TreeListSysRoleDto>>();
 
             TokenModelBeta token = JwtToken.ParsingJwtToken(HttpContext);
 
             try
             { 
-                var RoleList = await _sysRoleService.QueryAsync();
+                var RoleList = await _sysRoleService.QueryAsync(s => s.OrganizeId == Id);
                 res.data =  TreeGenerateTools.TreeGroup(_mapper.Map<List<TreeListSysRoleDto>>(RoleList), token.Role);
             }
             catch (Exception ex)
@@ -65,7 +65,7 @@ namespace BasisSoa.Api.Controllers.SysAdmin
 
             try {
 
-                res.data = _mapper.Map<DetailsSysRoleDto>( await _sysRoleService.IdAndUserIdQueryModuleAsync(Id, token.Id));
+                res.data = _mapper.Map<DetailsSysRoleDto>( await _sysRoleService.QuerySysModuleByIdAndUserIdAsync(Id, token.Id));
 
             } catch (Exception ex) {
                 res.code = (int)ApiEnum.Error;
@@ -91,6 +91,8 @@ namespace BasisSoa.Api.Controllers.SysAdmin
                 SysRole sysRoleInfo = _mapper.Map<SysRole>(Params);
                 sysRoleInfo.CreatorTime = DateTime.Now;
                 sysRoleInfo.CreatorUserId = token.Id;
+                sysRoleInfo.Id = Guid.NewGuid().ToString();
+                sysRoleInfo.DeleteMark = false;
                 var IsSuccess = await _sysRoleService.AddAsync(sysRoleInfo);
                 if (!IsSuccess) {
                     res.code = (int)ApiEnum.Failure;
@@ -112,8 +114,8 @@ namespace BasisSoa.Api.Controllers.SysAdmin
         /// <param name="Id"></param>
         /// <param name="Params"></param>
         /// <returns></returns>
-        [HttpPut]
-        public async Task<ApiResult<string>> Post(string Id,EditSysRoleDto Params)
+        [HttpPut("{Id}")]
+        public async Task<ApiResult<string>> Put(string Id,EditSysRoleDto Params)
         {
 
             ApiResult<string> res = new ApiResult<string>();
