@@ -36,13 +36,24 @@ namespace BasisSoa.Api.Controllers.SysAdmin
         [HttpGet("GetRoleTreeList")]
         public async Task<ApiResult<List<TreeListSysRoleDto>>> GetRoleTreeList(string Id) {
             ApiResult<List<TreeListSysRoleDto>> res = new ApiResult<List<TreeListSysRoleDto>>();
-
+            res.data = new List<TreeListSysRoleDto>();
             TokenModelBeta token = JwtToken.ParsingJwtToken(HttpContext);
 
             try
             { 
-                var RoleList = await _sysRoleService.QueryAsync(s => s.OrganizeId == Id);
-                res.data =  TreeGenerateTools.TreeGroup(_mapper.Map<List<TreeListSysRoleDto>>(RoleList), token.Role);
+                //var RoleList = await _sysRoleService.QueryAsync(s => s.OrganizeId == Id);
+                //res.data = TreeGenerateTools.TreeGroup(_mapper.Map<List<TreeListSysRoleDto>>(RoleList), token.Role);
+
+                var RoleList = _mapper.Map<List<TreeListSysRoleDto>>(await _sysRoleService.QueryAsync(s => s.OrganizeId == Id));
+                List<TreeListSysRoleDto> TreeList = new List<TreeListSysRoleDto>();
+                TreeList.AddRange(RoleList.FindAll(s => s.key == token.Role));
+                foreach (var item in TreeList)
+                {
+                    item.children = new List<TreeListSysRoleDto>();
+                    item.children.AddRange(TreeGenerateTools.TreeGroup(RoleList.Where(s => s.key == item.key).ToList(), item.key));
+                    res.data.Add(item);
+                }
+              
             }
             catch (Exception ex)
             {

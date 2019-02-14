@@ -25,6 +25,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 创建时间
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime? CreatorTime { get; set; }
         /// <summary>
         /// 创建人

@@ -66,7 +66,7 @@ namespace BasisSoa.Api.Controllers.SysAdmin
             }
 
             //修改登录信息 
-            var userLogonUp = await _userLogonService.UpdateAsync(c=>new SysUserLogon { LogOnCount = c.LogOnCount + 1 }, s => s.Id == apiResult.data.Id);
+            var userLogonUp = await _userLogonService.UpdateAsync(c=>new SysUserLogon { LogOnCount = c.LogOnCount + 1 }, s => s.UserId == apiResult.data.Id);
 
             if (userLogonUp)
             {

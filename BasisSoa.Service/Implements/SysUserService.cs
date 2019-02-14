@@ -6,6 +6,7 @@ using BasisSoa.Service.Interfaces;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -62,21 +63,20 @@ namespace BasisSoa.Service.Implements
         /// 获取用户列表（带有自身权限）
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResult<List<SysUser>>> UserQueryAsync()
+        public async Task<List<SysUser>> UserQueryAsync(Expression<Func<SysUser, bool>> whereExpression, int PageIndex, int PageSize, Expression<Func<SysUser, object>> strOrderByFileds = null, bool isAsc = true)
         {
-            var res = new ApiResult<List<SysUser>>();
-            res.data = new List<SysUser>();
+            var res = new List<SysUser>();
             try
             {
-                
-                var list = await Db.Queryable<SysUser>()
+
+                res = await Db.Queryable<SysUser>()
+                      .WhereIF(whereExpression != null, whereExpression)
                       .Mapper(it => it.sysUser, it => it.CreatorId)
                       .Mapper(it => it.sysOrganize, it => it.OrganizeId)
                       .Mapper(it => it.sysRole, it => it.RoleId)
                       .Mapper(it => it.sysUserLogon, it => it.sysUserLogon.UserId) //主表根据字表存的id来查
-                      .ToListAsync();
-
-                res.data = list;
+                      .OrderByIF(strOrderByFileds != null, strOrderByFileds)
+                      .ToPageListAsync(PageIndex, PageSize);
             }
             catch (Exception ex)
             {

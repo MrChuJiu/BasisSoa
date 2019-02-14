@@ -37,7 +37,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 执行结果
         /// </summary>
-        [SugarColumn(Length = 2048)]
+        [SugarColumn(Length = 2048, IsNullable = true)]
         public string ResultData { get; set; }
 
      
@@ -50,6 +50,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 创建时间
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime? CreatorTime { get; set; }
     }
 }

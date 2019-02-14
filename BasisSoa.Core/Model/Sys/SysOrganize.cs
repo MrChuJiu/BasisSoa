@@ -36,16 +36,19 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 是否默认展开
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public bool? IsExpand { get; set; }
 
 
         /// <summary>
         /// 删除时间
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime? DeleteTime { get; set; }
         /// <summary>
         /// 是否被删除
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public bool? DeleteMark { get; set; }
         /// <summary>
         /// 删除人ID
@@ -63,10 +66,12 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 是否有效
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public bool? EnabledMark { get; set; }
         /// <summary>
         /// 排序
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int? SortCode { get; set; }
 
 
@@ -74,6 +79,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 创建时间
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime? CreatorTime { get; set; }
         /// <summary>
         /// 创建人
@@ -101,7 +107,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// LOGO
         /// </summary>
-        [SugarColumn(Length = 256)]
+        [SugarColumn(Length = 256, IsNullable = true)]
         public string Logo { get; set; }
         /// <summary>
         /// 负责人微信
@@ -117,10 +123,12 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 公司位置
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int? Layers { get; set; }
         /// <summary>
         /// 支票抬头
         /// </summary>
+        [SugarColumn(Length = 64, IsNullable = true)]
         public string ChkHead { get; set; }
         /// <summary>
         /// 发票抬头
@@ -130,13 +138,13 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 公司地址
         /// </summary>
-        [SugarColumn(Length = 1024)]
+        [SugarColumn(Length = 1024, IsNullable = true)]
         public string Address { get; set; }
 
         /// <summary>
         /// 公司官网
         /// </summary>
-        [SugarColumn(Length = 1024)]
+        [SugarColumn(Length = 1024, IsNullable = true)]
         public string Website { get; set; }
         /// <summary>
         /// 公司邮箱

@@ -8,7 +8,7 @@ namespace BasisSoa.Common.TreeHelper
     {
         public static List<T> TreeGroup<T>(List<T> Data, string parentId, int level = 0) where T : TreeModel<T>
         {
-            List<T> entitys = Data.FindAll(t => t.parentId == parentId);
+            List<T> entitys = Data.FindAll(t => t.parentId == parentId );
             List<T> sbdata = new List<T>();
             if (entitys.Count > 0)
             {

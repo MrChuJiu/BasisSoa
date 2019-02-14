@@ -45,16 +45,19 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 是否默认展开
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public bool? IsExpand { get; set; }
 
 
         /// <summary>
         /// 删除时间
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime? DeleteTime { get; set; }
         /// <summary>
         /// 是否被删除
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public bool? DeleteMark { get; set; }
         /// <summary>
         /// 删除人ID
@@ -76,6 +79,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 是否有效
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public bool? EnabledMark { get; set; }
 
 
@@ -84,6 +88,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 创建时间
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime? CreatorTime { get; set; }
         /// <summary>
         /// 创建人

@@ -59,7 +59,7 @@ namespace BasisSoa.Core
         /// <summary>
         /// 功能描述:构造函数
         /// </summary>
-        private BaseDbContext()
+        public BaseDbContext()
         {
             if (string.IsNullOrEmpty(_connectionString))
                 throw new ArgumentNullException("数据库连接字符串为空");
@@ -121,5 +121,27 @@ namespace BasisSoa.Core
         {
             return new SimpleClient<T>(db);
         }
+
+
+
+        #region 根据实体类生成数据库表
+        /// <summary>
+        /// 功能描述:根据实体类生成数据库表
+        /// 作　　者:Blog.Core
+        /// </summary>
+        /// <param name="blnBackupTable">是否备份表</param>
+        /// <param name="lstEntitys">指定的实体</param>
+        public void CreateTableByEntity(bool blnBackupTable, params Type[] lstEntitys)
+        {
+            if (blnBackupTable)
+            {
+                _db.CodeFirst.BackupTable().InitTables(lstEntitys); //change entity backupTable            
+            }
+            else
+            {
+                _db.CodeFirst.InitTables(lstEntitys);
+            }
+        }
+        #endregion
     }
 }

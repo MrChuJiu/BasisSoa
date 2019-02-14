@@ -34,6 +34,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 是否可用
         /// </summary>
+        [SugarColumn( IsNullable = true)]
         public bool? EnabledMark { get; set; }
         /// <summary>
         /// 描述
@@ -44,6 +45,7 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 创建时间
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime? CreatorTime { get; set; }
         /// <summary>
         /// 创建人

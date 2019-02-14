@@ -220,6 +220,17 @@ namespace BasisSoa.Service.Implements
         {
             return await Task.Run(() => entityDB.GetList(whereExpression));
         }
+
+        /// <summary>
+        /// 根据条件查询一条
+        /// </summary>
+        /// <param name="whereExpression"></param>
+        /// <returns></returns>
+        public async Task<TEntity> QueryFirstAsync(Expression<Func<TEntity, bool>> whereExpression)
+        {
+            return await Task.Run(() => Db.Queryable<TEntity>().Where(whereExpression).FirstAsync());
+        }
+
         /// <summary>
         /// 根据条件分页查询（带条件，页码，排序字段，排序方式）
         /// </summary>
@@ -229,9 +240,9 @@ namespace BasisSoa.Service.Implements
         /// <param name="strOrderByFileds"></param>
         /// <param name="isAsc"></param>
         /// <returns></returns>
-        public async Task<List<TEntity>> QueryPageAsync(Expression<Func<TEntity, bool>> whereExpression, int intPageIndex = 0, int intPageSize = 20, Expression<Func<TEntity, object>> strOrderByFileds = null, bool isAsc = true)
+        public async Task<List<TEntity>> QueryPageAsync(Expression<Func<TEntity, bool>> whereExpression, int PageIndex = 0, int PageSize = 20, Expression<Func<TEntity, object>> strOrderByFileds = null, bool isAsc = true)
         {
-            return await Task.Run(() => db.Queryable<TEntity>().OrderByIF(strOrderByFileds != null, strOrderByFileds).WhereIF(whereExpression != null, whereExpression).ToPageList(intPageIndex, intPageSize));
+            return await Task.Run(() => db.Queryable<TEntity>().OrderByIF(strOrderByFileds != null, strOrderByFileds).WhereIF(whereExpression != null, whereExpression).ToPageList(PageIndex, PageSize));
         }
 
 

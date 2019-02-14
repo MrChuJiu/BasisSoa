@@ -60,7 +60,11 @@ namespace BasisSoa.Api.Controllers.SysAdmin
             try
             {
                 res.data = _mapper.Map<AppInitSysUserDto>(await _userService.QueryAsyncById(token.Id));
-                res.data.moduleDtos = MenuGenerateTools.MenuGroup(_mapper.Map<List<MenuSysModuleDto>>(await _sysModuleService.QueryAsync(s=>s.EnabledMark == true && s.DeleteMark == false)), token.Id);
+
+
+                var moduleList = _mapper.Map<List<MenuSysModuleDto>>(await _sysModuleService.QuerySysModuleByRolrIdAsync(token.Role));
+                //var oduleList =  _mapper.Map<List<MenuSysModuleDto>>(await _sysModuleService.QueryAsync(s=>s.EnabledMark == true && s.DeleteMark == false))
+                res.data.moduleDtos = MenuGenerateTools.MenuGroup(moduleList, "00000000-0000-0000-0000-000000000000");
             }
             catch(Exception ex) {
                 res.code = (int)ApiEnum.Error;

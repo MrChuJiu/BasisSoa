@@ -6,6 +6,7 @@ using AutoMapper;
 using BasisSoa.Api.Jwt;
 using BasisSoa.Api.ViewModels.Sys;
 using BasisSoa.Api.ViewModels.Sys.SyUser;
+using BasisSoa.Common;
 using BasisSoa.Common.ClientData;
 using BasisSoa.Common.EncryptionHelper;
 using BasisSoa.Common.EnumHelper;
@@ -48,13 +49,13 @@ namespace BasisSoa.Api.Controllers.SysAdmin
           
             AngularSTResult<DetailsSysUserDto> res = new AngularSTResult<DetailsSysUserDto>();
             //SearchClass<SysUser,EditSysUserDto>.GetWhereLambda(Params)
-            var userList = await _userService.QueryPageAsync(null,pi,ps,s=>s.CreatorTime,true);
+            var userList = await _userService.UserQueryAsync(null,pi,ps,s=>s.CreatorTime,true);
             res.list = _mapper.Map<List<DetailsSysUserDto>>(userList);
             return await Task.Run(() => res);
         }
 
         /// <summary>
-        /// 获取用户详情
+        /// 获取用户详情 个人中心信息编辑
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetUserDetails")]
@@ -64,6 +65,21 @@ namespace BasisSoa.Api.Controllers.SysAdmin
             res.data = _mapper.Map<DetailsSysUserDto>(await _userService.QueryAsyncById(Id));
             return await Task.Run(() => res);
         }
+
+
+        /// <summary>
+        /// 获取用户详情根据Token
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetTokenUserDetails")]
+        public async Task<ApiResult<DetailsSysUserDto>> GetTokenUserDetails()
+        {
+            ApiResult<DetailsSysUserDto> res = new ApiResult<DetailsSysUserDto>();
+            TokenModelBeta token = JwtToken.ParsingJwtToken(HttpContext);
+            res.data = _mapper.Map<DetailsSysUserDto>(await _userService.QueryAsyncById(token.Id));
+            return await Task.Run(() => res);
+        }
+
 
         /// <summary>
         /// 添加用户
@@ -84,9 +100,12 @@ namespace BasisSoa.Api.Controllers.SysAdmin
                 await _userService.AddAsync(userInfo);
 
                 SysUserLogon userLogonInfo = _mapper.Map<SysUserLogon>(Params);
+                userLogonInfo.Id = Guid.NewGuid().ToString();
                 userLogonInfo.UserId = userInfo.Id;
+                userLogonInfo.LogOnCount = 0;
                 userLogonInfo.UserSecretkey = Md5Crypt.Encrypt(Guid.NewGuid().ToString());
                 userLogonInfo.UserPassword = Md5Crypt.Encrypt(DES3Encrypt.EncryptString(userLogonInfo.UserPassword.ToLower(), userLogonInfo.UserSecretkey).ToLower(), false).ToLower();
+                userLogonInfo.PasswordSecurity = UniversalTool.PassSecurityValidation(userLogonInfo.UserPassword);
                 await _userLogonService.AddAsync(userLogonInfo);
 
             }
@@ -115,18 +134,36 @@ namespace BasisSoa.Api.Controllers.SysAdmin
             //开启事务
             try
             {
-                SysUser userInfo = _mapper.Map<SysUser>(Params);
-                userInfo.Id = Id;
-                await _userService.UpdateAsync(userInfo);
 
-        
-                if (!string.IsNullOrEmpty(Params.UserPassword)) {
-                    SysUserLogon userLogonInfo = _mapper.Map<SysUserLogon>(Params);
-                    userLogonInfo.UserId = Id;
-                    userLogonInfo.UserSecretkey = Md5Crypt.Encrypt(Guid.NewGuid().ToString());
-                    userLogonInfo.UserPassword = Md5Crypt.Encrypt(DES3Encrypt.EncryptString(userLogonInfo.UserPassword.ToLower(), userLogonInfo.UserSecretkey).ToLower(), false).ToLower();
+                SysUser userInfo = _mapper.Map<SysUser>(Params);
+                if (!UniversalTool.ModuleIsNull(userInfo)) {
+                    userInfo.Id = Id;
+                    await _userService.UpdateAsync(userInfo);
+                }
+
+
+                if (string.IsNullOrEmpty(Params.UserPassword) || Params.UserPassword == "********")
+                {
+                    Params.UserPassword = null;
+                    Params.PasswordSecurity = null;
+                }
+                SysUserLogon userLogonInfo = _mapper.Map<SysUserLogon>(Params);
+                if (!UniversalTool.ModuleIsNull(userLogonInfo))
+                {
+
+                   SysUserLogon sysUserLogon = await _userLogonService.QueryFirstAsync(s => s.UserId == Id);
+
+                    if (!string.IsNullOrEmpty(Params.UserPassword) && Params.UserPassword != "********")
+                    {
+                        userLogonInfo.PasswordSecurity = UniversalTool.PassSecurityValidation(userLogonInfo.UserPassword);
+                        userLogonInfo.UserSecretkey = Md5Crypt.Encrypt(Guid.NewGuid().ToString());
+                        userLogonInfo.UserPassword = Md5Crypt.Encrypt(DES3Encrypt.EncryptString(userLogonInfo.UserPassword.ToLower(), userLogonInfo.UserSecretkey).ToLower(), false).ToLower();
+                    }
+                    userLogonInfo.Id = sysUserLogon.Id;
                     await _userLogonService.UpdateAsync(userLogonInfo);
                 }
+
+               
 
             }
             catch (Exception ex)

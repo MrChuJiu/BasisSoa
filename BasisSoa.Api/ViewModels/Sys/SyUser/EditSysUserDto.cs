@@ -51,7 +51,7 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// <summary>
         /// 是否管理员（为了功能编辑个人资料中 附带企业信息）
         /// </summary>           
-        public bool IsAdministrator { get; set; }
+        public bool? IsAdministrator { get; set; }
 
 
         /// <summary>
@@ -61,11 +61,11 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// <summary>
         /// 是否可用
         /// </summary>
-        public bool EnabledMark { get; set; }
+        public bool? EnabledMark { get; set; }
         /// <summary>
         /// 排序
         /// </summary>
-        public int SortCode { get; set; }
+        public int? SortCode { get; set; }
 
 
 
@@ -80,11 +80,14 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// 密码
         /// </summary>
         public string UserPassword { get; set; }
-
+        /// <summary>
+        /// 密码安全性
+        /// </summary>
+        public string PasswordSecurity { get; set; }
         /// <summary>
         /// 是否允许多用户登录
         /// </summary>
-        public bool MultiUserLogin { get; set; }
+        public bool? MultiUserLogin { get; set; }
         /// <summary>
         /// 系统语言
         /// </summary>

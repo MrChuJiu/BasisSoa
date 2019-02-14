@@ -40,12 +40,22 @@ namespace BasisSoa.Api.Controllers.SysAdmin
         public async Task<ApiResult<List<TreeListSysOrganizeDto>>> GetOrganizeTreeList()
         {
             ApiResult<List<TreeListSysOrganizeDto>> res = new ApiResult<List<TreeListSysOrganizeDto>>();
+            res.data = new List<TreeListSysOrganizeDto>();
             TokenModelBeta token = JwtToken.ParsingJwtToken(HttpContext);
 
             try
             {
-                var OrganizeList = await _sysOrganizeService.QueryAsync();
-                res.data = TreeGenerateTools.TreeGroup(_mapper.Map<List<TreeListSysOrganizeDto>>(OrganizeList), token.Organize);
+                var OrganizeList = _mapper.Map<List<TreeListSysOrganizeDto>>(await _sysOrganizeService.QueryAsync());
+
+                List<TreeListSysOrganizeDto> TreeList = new List<TreeListSysOrganizeDto>();
+                TreeList.AddRange(OrganizeList.FindAll(s=>s.key == token.Organize));
+                foreach (var item in TreeList)
+                {
+                    item.children = new List<TreeListSysOrganizeDto>();
+                    item.children.AddRange(TreeGenerateTools.TreeGroup(OrganizeList.Where(s=>s.key == item.key).ToList(), item.key));
+                    res.data.Add(item);
+                }
+
             }
             catch (Exception ex)
             {

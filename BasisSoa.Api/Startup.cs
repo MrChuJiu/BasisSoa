@@ -45,7 +45,8 @@ namespace BasisSoa.Api
         {
 
             #region 依赖注入
-
+            services.AddScoped<BasisSoa.Core.BaseDbInit>();
+            services.AddScoped<BasisSoa.Core.BaseDbContext>();
             //系统
             services.AddTransient<ISysLogService, SysLogService>();
             services.AddTransient<ISysUserService, SysUserService>();
@@ -228,6 +229,10 @@ namespace BasisSoa.Api
 
             #endregion
 
+
+
+
+
         }
 
         /// <summary>
@@ -246,6 +251,15 @@ namespace BasisSoa.Api
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+
+            #region 配置静态资源
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Uploads/HeadImage")),
+                RequestPath = "/Uploads/HeadImage"
+            });
+            #endregion
 
             //Swagger UI
             app.UseSwagger();

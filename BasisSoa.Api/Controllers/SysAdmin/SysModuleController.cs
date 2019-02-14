@@ -48,7 +48,7 @@ namespace BasisSoa.Api.Controllers.SysAdmin
 
             try {
                 var ModuleList = await  _sysModuleService.QueryAsync(s=>s.DeleteMark == false && s.EnabledMark == true);
-                res.data = TreeGenerateTools.TreeGroup(_mapper.Map<List<TreeListSysModuleDto>>(ModuleList), token.Role);
+                res.data = TreeGenerateTools.TreeGroup(_mapper.Map<List<TreeListSysModuleDto>>(ModuleList), "00000000-0000-0000-0000-000000000000");
             }
             catch (Exception ex) {
                 res.code = (int)ApiEnum.Error;

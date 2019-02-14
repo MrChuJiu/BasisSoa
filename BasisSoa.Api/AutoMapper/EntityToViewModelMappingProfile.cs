@@ -26,6 +26,7 @@ namespace BasisSoa.Api.AutoMapper
                   .ForMember(s => s.OrganizeName, opts => opts.MapFrom(src => src.sysOrganize.FullName))
                   .ForMember(s => s.RoleName, opts => opts.MapFrom(src => src.sysRole.FullName))
                   .ForMember(s => s.LogOnCount, opts => opts.MapFrom(src => src.sysUserLogon.LogOnCount))
+                  .ForMember(s => s.PasswordSecurity, opts => opts.MapFrom(src => src.sysUserLogon.PasswordSecurity))
                   .ForMember(s => s.UserPassword, opts => opts.MapFrom(src => "********"))
                   .ForMember(s => s.LogOnCount, opts => opts.MapFrom(src => src.sysUserLogon.LogOnCount))
                   .ForMember(s => s.MultiUserLogin, opts => opts.MapFrom(src => src.sysUserLogon.MultiUserLogin))

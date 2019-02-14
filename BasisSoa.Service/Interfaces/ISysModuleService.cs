@@ -14,5 +14,12 @@ namespace BasisSoa.Service.Interfaces
         /// <param name="Id"></param>
         /// <returns></returns>
         Task<SysModule> QuerySysModuleByIDAsync(string Id);
+
+        /// <summary>
+        /// 根绝角色Id获取可见 模块
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        Task<List<SysModule>> QuerySysModuleByRolrIdAsync(string Id);
     }
 }

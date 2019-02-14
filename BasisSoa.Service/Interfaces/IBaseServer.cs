@@ -132,6 +132,12 @@ namespace BasisSoa.Service.Interfaces
         /// <returns></returns>
         Task<List<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> whereExpression);
 
+        /// <summary>
+        /// 根据条件查询一条
+        /// </summary>
+        /// <param name="whereExpression"></param>
+        /// <returns></returns>
+        Task<TEntity> QueryFirstAsync(Expression<Func<TEntity, bool>> whereExpression);
 
         /// <summary>
         /// 根据条件分页查询（带条件，页码，排序字段，排序方式）

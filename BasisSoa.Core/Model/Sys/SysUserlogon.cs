@@ -13,11 +13,17 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 密码
         /// </summary>
-          [SugarColumn(Length = 64,IsNullable = true)]
+        [SugarColumn(Length = 64,IsNullable = true)]
         public string UserPassword { get; set; }
+        /// <summary>
+        /// 密码  强、中、弱
+        /// </summary>
+        [SugarColumn(Length = 64, IsNullable = true)]
+        public string PasswordSecurity { get; set; }
         /// <summary>
         /// 登录次数
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int? LogOnCount { get; set; }
         /// <summary>
         /// 是否允许多用户登录
@@ -31,12 +37,12 @@ namespace BasisSoa.Core.Model.Sys
         /// <summary>
         /// 系统语言
         /// </summary>
-          [SugarColumn(Length = 64,IsNullable = true)]
+          [SugarColumn(Length = 128,IsNullable = true)]
         public string Language { get; set; }
         /// <summary>
         /// 系统样式
         /// </summary>
-          [SugarColumn(Length = 64,IsNullable = true)]
+        [SugarColumn(Length = 128, IsNullable = true)]
         public string Theme { get; set; }
         /// <summary>
         /// 用户ID

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -733,6 +734,45 @@ namespace BasisSoa.Common
         {
             DateTime Jan1st1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return (long)(time.AddHours(-8) - Jan1st1970).TotalMilliseconds;
+        }
+
+        /// <summary>
+        /// 密码安全性验证
+        /// </summary>
+        /// <param name="pass"></param>
+        /// <returns></returns>
+        public static string PassSecurityValidation(string pass)
+        {
+            string Security = "弱";
+
+            if (pass.Length > 10) {
+                Security = "强";
+            } else if (pass.Length > 6) {
+                Security = "中";
+            } 
+            return Security;
+        }
+
+        /// <summary> 
+        /// 检测模型下所有参数都为空 是否都为空
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="module"></param>
+        /// <returns></returns>
+        public static bool ModuleIsNull<T>(T module) {
+            bool isNull = true;
+            if (module == null) {
+                return isNull;
+            }
+            Type type = module.GetType();
+            PropertyInfo[] infos = type.GetProperties();
+            foreach (var itme in infos) {
+                if(itme.GetValue(module) != null) {
+                    isNull = false;
+                    return isNull;
+                }
+            }
+            return isNull;
         }
     }
 }
