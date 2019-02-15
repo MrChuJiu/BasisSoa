@@ -14,9 +14,10 @@ namespace BasisSoa.Api.Jwt
         /// 用户主键
         /// </summary>
         public string Id { get; set; }
-
+        /// <summary>
+        /// 用户名
+        /// </summary>
         public string Name { get; set; }
-
         /// <summary>
         /// 身份
         /// </summary>
@@ -25,6 +26,11 @@ namespace BasisSoa.Api.Jwt
         /// 项目名称
         /// </summary>
         public string Organize { get; set; }
+        /// <summary>
+        /// 是否管理员
+        /// </summary>
+        public bool IsAdmin { get; set; }
+
         /// <summary>
         /// 令牌类型
         /// </summary>

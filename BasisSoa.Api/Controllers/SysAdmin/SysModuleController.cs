@@ -6,6 +6,7 @@ using AutoMapper;
 using BasisSoa.Api.Jwt;
 using BasisSoa.Api.ViewModels.Sys;
 using BasisSoa.Api.ViewModels.Sys.SysModule;
+using BasisSoa.Common;
 using BasisSoa.Common.ClientData;
 using BasisSoa.Common.EnumHelper;
 using BasisSoa.Common.TreeHelper;
@@ -20,9 +21,10 @@ namespace BasisSoa.Api.Controllers.SysAdmin
     [ApiController]
     public class SysModuleController : Controller
     {
-
+        private readonly ISysRoleService _sysRoleService;
         private readonly ISysModuleService _sysModuleService;
         private readonly ISysModuleActionService _sysModuleActionService;
+        private readonly ISysRoleAuthorizeService _sysRoleAuthorizeService;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -30,9 +32,11 @@ namespace BasisSoa.Api.Controllers.SysAdmin
         /// </summary>
         /// <param name="sysModuleService"></param>
         /// <param name="mapper"></param>
-        public SysModuleController(ISysModuleService sysModuleService, ISysModuleActionService sysModuleActionService, IMapper mapper) {
+        public SysModuleController(ISysModuleService sysModuleService, ISysModuleActionService sysModuleActionService, ISysRoleAuthorizeService sysRoleAuthorizeService, ISysRoleService sysRoleService, IMapper mapper) {
             _sysModuleService = sysModuleService;
             _sysModuleActionService = sysModuleActionService;
+            _sysRoleAuthorizeService = sysRoleAuthorizeService;
+            _sysRoleService = sysRoleService;
             _mapper = mapper;
         }
         /// <summary>
@@ -57,6 +61,52 @@ namespace BasisSoa.Api.Controllers.SysAdmin
 
             return await Task.Run( () => res);
         }
+
+        /// <summary>
+        /// 获取权限模块树
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetModuleTreeAuthList")]
+        public async Task<ApiResult<List<CommonTreeModel>>> GetModuleTreeAuthList(string Id)
+        {
+
+            ApiResult<List<CommonTreeModel>> res = new ApiResult<List<CommonTreeModel>>();
+            res.data = new List<CommonTreeModel>();
+            TokenModelBeta token = JwtToken.ParsingJwtToken(HttpContext);
+
+            try
+            {
+                //获取可以看到的 模块
+                var ModuleList = await _sysRoleAuthorizeService.GetRoleModuleByIdAsync(token.Role);
+                if (ModuleList.Count > 0)
+                {
+                    //查询这个角色是否是菜单
+                    var role = await _sysRoleService.QueryByIDAsync(Id);
+                    //如果不是菜单
+                    if (!string.IsNullOrEmpty(Id) && !UniversalTool.ModuleIsNull(role))
+                    {
+                        //获取传入角色的权限信息
+                        List<string> roleKeyList = (await _sysRoleAuthorizeService.GetRoleModuleByIdAsync(Id)).Select(s=>s.key).ToList() ;
+                        ModuleList.Where(a => roleKeyList.Contains(a.key) && a.type == 1).ToList().ForEach(a => a.@checked = true);
+                        //如果打开的是自己的就禁用
+                        if (Id == token.Role) {
+                            ModuleList.ForEach(a => a.disableCheckbox = true);
+                        }
+                   
+                    }
+
+                    res.data.AddRange(TreeGenerateTools.TreeGroup(ModuleList, "00000000-0000-0000-0000-000000000000"));
+                }
+            }
+            catch (Exception ex)
+            {
+                res.code = (int)ApiEnum.Error;
+                res.message = "异常：" + ex.Message;
+            }
+
+            return await Task.Run(() => res);
+        }
+
 
         /// <summary>
         /// 获取模块详情

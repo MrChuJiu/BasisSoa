@@ -33,5 +33,13 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// 用户组织名称
         /// </summary>
         public string OrganizeName { get; set; }
+
+
+
+        //*******额外参数
+        /// <summary>
+        /// 是否禁用
+        /// </summary>
+        public bool IsDisabled { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BasisSoa.Common;
 using BasisSoa.Common.EncryptionHelper;
 using BasisSoa.Core.Model.Sys;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -110,11 +111,11 @@ namespace BasisSoa.Core
                         UserId = UserId,
                         Theme = "",
                         Language = "",
-                        UserSecretkey = UserSecretkey,
                         MultiUserLogin = false,
                         LogOnCount = 0,
-                        UserPassword = Md5Crypt.Encrypt(DES3Encrypt.EncryptString("123456".ToLower(), UserSecretkey).ToLower(), false).ToLower(),
+                        UserSecretkey = UserSecretkey,
                         PasswordSecurity = UniversalTool.PassSecurityValidation("123456"),
+                        UserPassword = Md5Crypt.Encrypt(DES3Encrypt.EncryptString("123456".ToLower(), UserSecretkey).ToLower(), false).ToLower(),
                     }).ExecuteCommand();
                     DbContext.Db.Insertable(new SysLog()
                     {
@@ -452,7 +453,7 @@ namespace BasisSoa.Core
                     }).ExecuteCommand();
 
 
-                    //角色权限
+                    //角色模块权限
                     foreach (var item in await DbContext.Db.Queryable<SysModule>().ToListAsync()) {
                         //角色权限
                         DbContext.Db.Insertable<SysRoleAuthorize>(new SysRoleAuthorize()
@@ -465,8 +466,29 @@ namespace BasisSoa.Core
                         }).ExecuteCommand();
                     }
 
-                  
 
+                    //角色模块按钮权限
+
+                    foreach (var item in await DbContext.Db.Queryable<SysRoleAuthorize,SysModule,SysModuleAction>((sr,sm,sma) => new object[] {
+                          JoinType.Left,sr.ModuleId == sm.Id,
+                          JoinType.Left,sm.Id == sma.ModuleId,
+                    })
+                    .Where((sr, sm, sma) => sma.Id != null)
+                    .Select((sr, sm, sma)=> new {
+                        id = sr.Id,
+                        actionid = sma.Id
+                    }).ToListAsync())
+                    {
+                        //角色权限
+                        DbContext.Db.Insertable<SysRoleAuthorizeAction>(new SysRoleAuthorizeAction()
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            RoleAuthId = item.id,
+                            ModuleActionId = item.actionid,
+                            CreatorTime = DateTime.Now,
+                            CreatorUserId = UserId,
+                        }).ExecuteCommand();
+                    }
                 }
 
 

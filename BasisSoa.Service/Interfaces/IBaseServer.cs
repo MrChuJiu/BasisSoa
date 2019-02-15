@@ -1,4 +1,5 @@
 ﻿using BasisSoa.Common.EnumHelper;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -130,7 +131,7 @@ namespace BasisSoa.Service.Interfaces
         /// </summary>
         /// <param name="whereExpression"></param>
         /// <returns></returns>
-        Task<List<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> whereExpression);
+        Task<List<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> whereExpression, Expression<Func<TEntity, object>> strOrderByFileds = null, OrderByType type = OrderByType.Desc);
 
         /// <summary>
         /// 根据条件查询一条
@@ -148,7 +149,7 @@ namespace BasisSoa.Service.Interfaces
         /// <param name="strOrderByFileds"></param>
         /// <param name="isAsc"></param>
         /// <returns></returns>
-        Task<List<TEntity>> QueryPageAsync(Expression<Func<TEntity, bool>> whereExpression, int intPageIndex = 0, int intPageSize = 20, Expression<Func<TEntity, object>> strOrderByFileds = null, bool isAsc = true);
+        Task<List<TEntity>> QueryPageAsync(Expression<Func<TEntity, bool>> whereExpression, int intPageIndex = 0, int intPageSize = 20, Expression<Func<TEntity, object>> strOrderByFileds = null, OrderByType type = OrderByType.Desc);
         #endregion
 
 

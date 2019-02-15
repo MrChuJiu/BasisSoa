@@ -216,9 +216,9 @@ namespace BasisSoa.Service.Implements
         /// </summary>
         /// <param name="whereExpression"></param>
         /// <returns></returns>
-        public async Task<List<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> whereExpression)
+        public async Task<List<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> whereExpression, Expression<Func<TEntity, object>> strOrderByFileds = null, OrderByType type = OrderByType.Desc)
         {
-            return await Task.Run(() => entityDB.GetList(whereExpression));
+            return await db.Queryable<TEntity>().OrderByIF(strOrderByFileds != null, strOrderByFileds, type).WhereIF(whereExpression != null, whereExpression).ToListAsync();
         }
 
         /// <summary>
@@ -240,9 +240,9 @@ namespace BasisSoa.Service.Implements
         /// <param name="strOrderByFileds"></param>
         /// <param name="isAsc"></param>
         /// <returns></returns>
-        public async Task<List<TEntity>> QueryPageAsync(Expression<Func<TEntity, bool>> whereExpression, int PageIndex = 0, int PageSize = 20, Expression<Func<TEntity, object>> strOrderByFileds = null, bool isAsc = true)
+        public async Task<List<TEntity>> QueryPageAsync(Expression<Func<TEntity, bool>> whereExpression, int PageIndex = 0, int PageSize = 20, Expression<Func<TEntity, object>> strOrderByFileds = null, OrderByType type = OrderByType.Desc)
         {
-            return await Task.Run(() => db.Queryable<TEntity>().OrderByIF(strOrderByFileds != null, strOrderByFileds).WhereIF(whereExpression != null, whereExpression).ToPageList(PageIndex, PageSize));
+            return await Task.Run(() => db.Queryable<TEntity>().OrderByIF(strOrderByFileds != null, strOrderByFileds, type).WhereIF(whereExpression != null, whereExpression).ToPageList(PageIndex, PageSize));
         }
 
 

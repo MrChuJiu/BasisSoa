@@ -24,9 +24,11 @@ namespace BasisSoa.Api.Controllers.SysAdmin
     {
         private readonly IMapper _mapper;
         private readonly ISysRoleService _sysRoleService;
-        public SysRoleController(IMapper mapper, ISysRoleService sysRoleService) {
+        private readonly ISysRoleAuthorizeService _sysRoleAuthorizeService;
+        public SysRoleController(IMapper mapper, ISysRoleService sysRoleService, ISysRoleAuthorizeService sysRoleAuthorizeService) {
             _mapper = mapper;
             _sysRoleService = sysRoleService;
+            _sysRoleAuthorizeService = sysRoleAuthorizeService;
         }
 
         /// <summary>
@@ -41,19 +43,26 @@ namespace BasisSoa.Api.Controllers.SysAdmin
 
             try
             { 
-                //var RoleList = await _sysRoleService.QueryAsync(s => s.OrganizeId == Id);
-                //res.data = TreeGenerateTools.TreeGroup(_mapper.Map<List<TreeListSysRoleDto>>(RoleList), token.Role);
-
                 var RoleList = _mapper.Map<List<TreeListSysRoleDto>>(await _sysRoleService.QueryAsync(s => s.OrganizeId == Id));
-                List<TreeListSysRoleDto> TreeList = new List<TreeListSysRoleDto>();
-                TreeList.AddRange(RoleList.FindAll(s => s.key == token.Role));
-                foreach (var item in TreeList)
+
+                var sysRole = new List<TreeListSysRoleDto>();
+                sysRole.AddRange(RoleList);
+
+                //如果不是管理员
+                if (!token.IsAdmin)
                 {
-                    item.children = new List<TreeListSysRoleDto>();
-                    item.children.AddRange(TreeGenerateTools.TreeGroup(RoleList.Where(s => s.key == item.key).ToList(), item.key));
-                    res.data.Add(item);
+                    var sysRoleInfo = sysRole.Where(s => s.key == token.Role).FirstOrDefault();
+                    sysRoleInfo.children = new List<TreeListSysRoleDto>();
+                    sysRoleInfo.children.AddRange(TreeGenerateTools.TreeGroup(RoleList.Where(s=>s.key != sysRoleInfo.key).ToList(), sysRoleInfo.key));
+                    res.data.Add(sysRoleInfo);
                 }
+                else
+                {
+                    res.data.AddRange(TreeGenerateTools.TreeGroup(RoleList, "00000000-0000-0000-0000-000000000000"));
+                }
+             
               
+
             }
             catch (Exception ex)
             {
@@ -77,6 +86,11 @@ namespace BasisSoa.Api.Controllers.SysAdmin
             try {
 
                 res.data = _mapper.Map<DetailsSysRoleDto>( await _sysRoleService.QuerySysModuleByIdAndUserIdAsync(Id, token.Id));
+                if (token.Role == Id)
+                {
+                    res.data.IsDisabled = true;
+                }
+
 
             } catch (Exception ex) {
                 res.code = (int)ApiEnum.Error;
@@ -99,15 +113,23 @@ namespace BasisSoa.Api.Controllers.SysAdmin
 
             try
             {
+                string roleId = Guid.NewGuid().ToString();
+
                 SysRole sysRoleInfo = _mapper.Map<SysRole>(Params);
                 sysRoleInfo.CreatorTime = DateTime.Now;
                 sysRoleInfo.CreatorUserId = token.Id;
-                sysRoleInfo.Id = Guid.NewGuid().ToString();
+                sysRoleInfo.Id = roleId;
                 sysRoleInfo.DeleteMark = false;
                 var IsSuccess = await _sysRoleService.AddAsync(sysRoleInfo);
-                if (!IsSuccess) {
+                if (!IsSuccess)
+                {
                     res.code = (int)ApiEnum.Failure;
                     res.message = "错误：添加角色失败";
+                }
+                else {
+                    //添加权限
+                    //Params.treeModels
+                    res = await _sysRoleAuthorizeService.AddSysModuleActionsAsync(roleId, token.Id, Params.treeModels);
                 }
             }
             catch (Exception ex)
@@ -141,6 +163,12 @@ namespace BasisSoa.Api.Controllers.SysAdmin
                 {
                     res.code = (int)ApiEnum.Failure;
                     res.message = "错误：修改角色失败";
+                }
+                else
+                {
+                    //添加权限
+                    //Params.treeModels
+                    res = await _sysRoleAuthorizeService.AddSysModuleActionsAsync(Id, token.Id, Params.treeModels);
                 }
             }
             catch (Exception ex)

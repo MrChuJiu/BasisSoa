@@ -75,6 +75,7 @@ namespace BasisSoa.Api.Controllers.SysAdmin
                     new Claim(ClaimTypes.Name, apiResult.data.RealName),
                     new Claim(ClaimTypes.Gender, "Web"),
                     new Claim(ClaimTypes.GroupSid, apiResult.data.OrganizeId),
+                    new Claim(ClaimTypes.Authentication, apiResult.data.IsAdministrator == true ? "1" : "0"),
                     new Claim(ClaimTypes.Expiration, DateTime.Now.AddSeconds(_requirement.Expiration.TotalSeconds).ToString()) };
 
                 claims.Add(new Claim(ClaimTypes.Role, apiResult.data.RoleId));

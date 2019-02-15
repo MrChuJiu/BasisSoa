@@ -63,7 +63,7 @@ namespace BasisSoa.Service.Implements
         /// 获取用户列表（带有自身权限）
         /// </summary>
         /// <returns></returns>
-        public async Task<List<SysUser>> UserQueryAsync(Expression<Func<SysUser, bool>> whereExpression, int PageIndex, int PageSize, Expression<Func<SysUser, object>> strOrderByFileds = null, bool isAsc = true)
+        public async Task<List<SysUser>> UserQueryAsync(Expression<Func<SysUser, bool>> whereExpression, int PageIndex, int PageSize, Expression<Func<SysUser, object>> strOrderByFileds = null, OrderByType type = OrderByType.Desc)
         {
             var res = new List<SysUser>();
             try
@@ -75,7 +75,7 @@ namespace BasisSoa.Service.Implements
                       .Mapper(it => it.sysOrganize, it => it.OrganizeId)
                       .Mapper(it => it.sysRole, it => it.RoleId)
                       .Mapper(it => it.sysUserLogon, it => it.sysUserLogon.UserId) //主表根据字表存的id来查
-                      .OrderByIF(strOrderByFileds != null, strOrderByFileds)
+                      .OrderByIF(strOrderByFileds != null, strOrderByFileds,OrderByType.Desc)
                       .ToPageListAsync(PageIndex, PageSize);
             }
             catch (Exception ex)

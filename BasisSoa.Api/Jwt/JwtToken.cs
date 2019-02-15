@@ -65,12 +65,14 @@ namespace BasisSoa.Api.Jwt
             object organize = new object();
             object name = new object();
             object tokentype = new object();
+            object isAdmin = new object();
             try
             {
                 jwtToken.Payload.TryGetValue(ClaimTypes.GroupSid, out organize);
                 jwtToken.Payload.TryGetValue(ClaimTypes.Role, out role);
                 jwtToken.Payload.TryGetValue(ClaimTypes.Name, out name);
                 jwtToken.Payload.TryGetValue(ClaimTypes.Gender, out tokentype);
+                jwtToken.Payload.TryGetValue(ClaimTypes.Authentication, out isAdmin);
             }
             catch (Exception e)
             {
@@ -84,6 +86,7 @@ namespace BasisSoa.Api.Jwt
                 Organize = organize.ToString(),
                 Name = name.ToString(),
                 TokenType = tokentype.ToString(),
+                IsAdmin = isAdmin.ToString() == "1" ? true : false
             };
             return tm;
         }

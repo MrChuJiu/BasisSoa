@@ -1,4 +1,6 @@
-﻿using BasisSoa.Core.Model.Sys;
+﻿using BasisSoa.Common.ClientData;
+using BasisSoa.Common.TreeHelper;
+using BasisSoa.Core.Model.Sys;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +15,20 @@ namespace BasisSoa.Service.Interfaces
         /// </summary>
         /// <returns></returns>
        Task<List<SysRoleAuthorize>> GetRoleModule();
+        /// <summary>
+        /// 根据角色Id获取权限
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        Task<List<CommonTreeModel>> GetRoleModuleByIdAsync(string Id);
+
+        /// <summary>
+        /// 添加角色权限
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="userId"></param>
+        /// <param name="authorizeActions"></param>
+        /// <returns></returns>
+        Task<ApiResult<string>> AddSysModuleActionsAsync(string Id, string userId, List<CommonTreeModel> authorizeActions);
     }
 }

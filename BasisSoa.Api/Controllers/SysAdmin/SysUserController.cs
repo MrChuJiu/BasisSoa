@@ -49,7 +49,7 @@ namespace BasisSoa.Api.Controllers.SysAdmin
           
             AngularSTResult<DetailsSysUserDto> res = new AngularSTResult<DetailsSysUserDto>();
             //SearchClass<SysUser,EditSysUserDto>.GetWhereLambda(Params)
-            var userList = await _userService.UserQueryAsync(null,pi,ps,s=>s.CreatorTime,true);
+            var userList = await _userService.UserQueryAsync(null,pi,ps,s=>s.CreatorTime,SqlSugar.OrderByType.Desc);
             res.list = _mapper.Map<List<DetailsSysUserDto>>(userList);
             return await Task.Run(() => res);
         }
