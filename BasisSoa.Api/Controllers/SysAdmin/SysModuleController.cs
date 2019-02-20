@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BasisSoa.Api.Controllers.SysAdmin
 {
+    [Authorize(Policy = "Permission")]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]

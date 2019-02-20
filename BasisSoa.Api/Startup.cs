@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BasisSoa.Api.AutoMapper;
 using BasisSoa.Api.Jwt;
+using BasisSoa.Api.ApiWebSocket;
 using BasisSoa.Core;
 using BasisSoa.Service.Implements;
 using BasisSoa.Service.Interfaces;
@@ -74,6 +75,7 @@ namespace BasisSoa.Api
             services.AddAutoMapper();
             //启动配置
             AutoMapperConfig.RegisterMappings();
+       
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -253,6 +255,8 @@ namespace BasisSoa.Api
             }
 
 
+            app.Map("/ApiWebSocket", NoticeHandler.Map);
+
             #region 配置静态资源
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -272,8 +276,14 @@ namespace BasisSoa.Api
             //认证
             app.UseAuthentication();
             app.UseCors("AllowAll");
-
             app.UseHttpsRedirection();
+
+
+            //WebSocket的方式实现消息
+            //app.UseWebSockets();
+            //app.UseMiddleware<NoticeWebSocketMiddleware>();
+
+
             app.UseMvc();
         }
     }

@@ -5,19 +5,46 @@ using System.Threading.Tasks;
 
 namespace BasisSoa.Api.Jwt
 {
-
-    /// <summary>
-    /// 用户或角色或其他凭据实体
-    /// </summary>
     public class Permission
     {
+
         /// <summary>
-        /// 用户或角色或其他凭据名称
+        /// 关系Id
         /// </summary>
-        public virtual string Role { get; set; }
+        public string Id { get; set; }
+
+
+        private string _ApiUrl { get; set; }
+
         /// <summary>
-        /// 请求Url
+        /// 后台控制器
         /// </summary>
-        public virtual string Url { get; set; }
+        public string ApiUrl {
+            get {
+                return _ApiUrl + ActionName;
+            }
+            set {
+                this._ApiUrl = value;
+            }
+        }
+        /// <summary>
+        /// GET POST DEL PUT
+        /// </summary>
+        public string RequestMethod { get; set; }
+
+
+        private string _ActionName { get; set; }
+        /// <summary>
+        /// 方法名称
+        /// </summary>
+        public string ActionName {
+            get {
+                return _ActionName == "" ? "" : "/" + _ActionName;
+            }
+            set {
+                this._ActionName = value ?? "";
+            }
+        }
+
     }
 }

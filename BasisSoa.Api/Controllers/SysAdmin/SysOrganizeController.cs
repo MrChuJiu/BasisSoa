@@ -11,12 +11,14 @@ using BasisSoa.Common.EnumHelper;
 using BasisSoa.Common.TreeHelper;
 using BasisSoa.Core.Model.Sys;
 using BasisSoa.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BasisSoa.Api.Controllers.SysAdmin
 {
+    [Authorize(Policy = "Permission")]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]

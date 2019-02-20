@@ -9,6 +9,7 @@ using BasisSoa.Common.ClientData;
 using BasisSoa.Common.EnumHelper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace BasisSoa.Api.Controllers
 {

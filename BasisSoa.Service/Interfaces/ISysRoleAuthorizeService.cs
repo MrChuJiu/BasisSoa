@@ -14,7 +14,7 @@ namespace BasisSoa.Service.Interfaces
         /// 获取当前系统所有用户的登录权限和接口访问权限
         /// </summary>
         /// <returns></returns>
-       Task<List<SysRoleAuthorize>> GetRoleModule();
+       Task<List<RequestApiAuth>> GetRoleModule();
         /// <summary>
         /// 根据角色Id获取权限
         /// </summary>

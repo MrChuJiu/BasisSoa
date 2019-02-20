@@ -52,8 +52,10 @@ namespace BasisSoa.Api.Jwt
                         orderby item.Id
                         select new Permission
                         {
-                            Url = item.sysModule?.ApiUrl,
-                            Role = item.sysRole?.Id,
+                           Id = item.Id,
+                           ApiUrl = item.ApiUrl,
+                           RequestMethod = item.RequestMethod,
+                           ActionName = item.ActionName
                         }).ToList();
 
             requirement.Permissions = list;
@@ -88,33 +90,22 @@ namespace BasisSoa.Api.Jwt
 
                     httpContext.User = result.Principal;
                     //权限中是否存在请求的url
-                    if (requirement.Permissions.GroupBy(g => g.Url).Where(w => w.Key?.ToLower() == questUrl).Count() > 0)
-                    {
-                        // 获取当前用户的角色信息
-                        var currentUserRoles = (from item in httpContext.User.Claims
-                                                where item.Type == requirement.ClaimType
-                                                select item.Value).ToList();
+
+                    // 获取当前用户的角色信息
+                    var currentUserRoles = (from item in httpContext.User.Claims
+                                            where item.Type == requirement.ClaimType
+                                            select item.Value).FirstOrDefault();
 
 
-                        //验证权限
-                        if (currentUserRoles.Count() <= 0 || requirement.Permissions.Where(w => currentUserRoles.Contains(w.Role) && w.Url.ToLower() == questUrl).Count() <= 0)
-                        {
-
-                            context.Fail();
-                            return;
-                            // 可以在这里设置跳转页面，不过还是会访问当前接口地址的
-                            // httpContext.Response.Redirect(requirement.DeniedAction);
-                        }
-
-
-
-                    }
-                    else
-                    {
+                    //这里就是对权限的验证
+                    //请求方式    httpContext.Request.Method
+                    //请求连接    questUrl
+                    //我们的权限  Permissions
+                    if (requirement.Permissions.Where(g => g.Id == currentUserRoles && g.ApiUrl?.ToLower() == questUrl && g.RequestMethod == httpContext.Request.Method).Count() <= 0) {
                         context.Fail();
                         return;
-
                     }
+
                     //判断过期时间
                     if ((httpContext.User.Claims.SingleOrDefault(s => s.Type == ClaimTypes.Expiration)?.Value) != null && DateTime.Parse(httpContext.User.Claims.SingleOrDefault(s => s.Type == ClaimTypes.Expiration)?.Value) >= DateTime.Now)
                     {

@@ -17,14 +17,24 @@ namespace BasisSoa.Service.Implements
         /// 获取当前系统所有用户的登录权限和接口访问权限
         /// </summary>
         /// <returns></returns>
-        public async Task<List<SysRoleAuthorize>> GetRoleModule()
+        public async Task<List<RequestApiAuth>> GetRoleModule()
         {
-            List<SysRoleAuthorize> res = new List<SysRoleAuthorize>();
+            List<RequestApiAuth> res = new List<RequestApiAuth>();
 
-            res = await Db.Queryable<SysRoleAuthorize>()
-                .Mapper(it => it.sysRole, it => it.RoleId)
-                .Mapper(it => it.sysModule, it => it.ModuleId)
-                .ToListAsync();
+            res = await Db.Queryable<SysRoleAuthorize, SysRole, SysModule, SysRoleAuthorizeAction, SysModuleAction>
+                                    ((sra, sr,sm,sraa,sma) => new object[] {
+                                      JoinType.Left,sra.RoleId == sr.Id,
+                                      JoinType.Left,sra.ModuleId == sm.Id,
+                                      JoinType.Left,sra.Id == sraa.RoleAuthId,
+                                      JoinType.Left,sma.Id == sraa.ModuleActionId,
+                                    })
+                                    .Select((sra, sr, sm, sraa, sma) => new RequestApiAuth
+                                    {
+                                        Id = sr.Id,
+                                        ApiUrl = sm.ApiUrl,
+                                        RequestMethod = sma.RequestMethod,
+                                        ActionName = sma.ActionName
+                                    }).ToListAsync();
 
             return res;
         }

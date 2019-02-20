@@ -53,7 +53,7 @@ namespace BasisSoa.Api.Jwt
 
 
         /// <summary>
-        /// 解析JwtToken
+        /// 解析JWT
         /// </summary>
         /// <param name="jwtStr"></param>
         /// <returns></returns>
