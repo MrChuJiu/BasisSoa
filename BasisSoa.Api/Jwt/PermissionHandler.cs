@@ -101,7 +101,13 @@ namespace BasisSoa.Api.Jwt
                     //请求方式    httpContext.Request.Method
                     //请求连接    questUrl
                     //我们的权限  Permissions
-                    if (requirement.Permissions.Where(g => g.Id == currentUserRoles && g.ApiUrl?.ToLower() == questUrl && g.RequestMethod == httpContext.Request.Method).Count() <= 0) {
+
+                    //PUT请求要单独处理
+                    if (httpContext.Request.Method == "PUT" && requirement.Permissions.Where(g => g.Id == currentUserRoles && questUrl.Contains(g.ApiUrl?.ToLower())).Count() > 0) {
+
+                    
+                    }
+                    else if (requirement.Permissions.Where(g => g.Id == currentUserRoles && g.ApiUrl?.ToLower() == questUrl && g.RequestMethod == httpContext.Request.Method).Count() <= 0 ) {
                         context.Fail();
                         return;
                     }

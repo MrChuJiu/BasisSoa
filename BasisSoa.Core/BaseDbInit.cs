@@ -31,7 +31,8 @@ namespace BasisSoa.Core
                                                     typeof(SysModule),                         
                                                     typeof(SysModuleAction), 
                                                     typeof(SysRoleAuthorize), 
-                                                    typeof(SysRoleAuthorizeAction));
+                                                    typeof(SysRoleAuthorizeAction),
+                                                    typeof(SysMessage));
 
                 #region 追加种子数据
 
@@ -227,6 +228,30 @@ namespace BasisSoa.Core
                         CreatorTime = DateTime.Now,
                         CreatorUserId = UserId,
                     }).ExecuteCommand();
+                    DbContext.Db.Insertable<SysModuleAction>(new SysModuleAction()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        ModuleId = userModuleId,
+                        ActionName = "GetUserDetails",
+                        RequestMethod = "GET",
+                        ACL = "GetUserDetails",
+                        EnabledMark = true,
+                        Description = "获取用户详情 个人中心信息编辑",
+                        CreatorTime = DateTime.Now,
+                        CreatorUserId = UserId,
+                    }).ExecuteCommand();
+                    DbContext.Db.Insertable<SysModuleAction>(new SysModuleAction()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        ModuleId = userModuleId,
+                        ActionName = "GetTokenUserDetails",
+                        RequestMethod = "GET",
+                        ACL = "GetTokenUserDetails",
+                        EnabledMark = true,
+                        Description = "获取用户详情根据Token",
+                        CreatorTime = DateTime.Now,
+                        CreatorUserId = UserId,
+                    }).ExecuteCommand();
 
 
                     //子菜单 角色
@@ -302,8 +327,19 @@ namespace BasisSoa.Core
                         CreatorTime = DateTime.Now,
                         CreatorUserId = UserId,
                     }).ExecuteCommand();
-
-
+                    DbContext.Db.Insertable<SysModuleAction>(new SysModuleAction()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        ModuleId = roleModuleId,
+                        ActionName = "GetRoleTreeList",
+                        RequestMethod = "GET",
+                        ACL = "GetRoleTreeList",
+                        EnabledMark = true,
+                        Description = "获取角色树",
+                        CreatorTime = DateTime.Now,
+                        CreatorUserId = UserId,
+                    }).ExecuteCommand();
+                    
                     //子菜单 组织
                     string organizeModuleId = Guid.NewGuid().ToString();
                     DbContext.Db.Insertable<SysModule>(new SysModule()
@@ -377,6 +413,20 @@ namespace BasisSoa.Core
                         CreatorTime = DateTime.Now,
                         CreatorUserId = UserId,
                     }).ExecuteCommand();
+                    DbContext.Db.Insertable<SysModuleAction>(new SysModuleAction()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        ModuleId = organizeModuleId,
+                        ActionName = "GetOrganizeTreeList",
+                        RequestMethod = "GET",
+                        ACL = "GetOrganizeTreeList",
+                        EnabledMark = true,
+                        Description = "获取组织树",
+                        CreatorTime = DateTime.Now,
+                        CreatorUserId = UserId,
+                    }).ExecuteCommand();
+
+                    
 
                     //子菜单 模块
                     string moduleModuleId = Guid.NewGuid().ToString();
@@ -448,6 +498,30 @@ namespace BasisSoa.Core
                         ACL = "DELETE",
                         EnabledMark = true,
                         Description = "",
+                        CreatorTime = DateTime.Now,
+                        CreatorUserId = UserId,
+                    }).ExecuteCommand();
+                    DbContext.Db.Insertable<SysModuleAction>(new SysModuleAction()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        ModuleId = moduleModuleId,
+                        ActionName = "GetModuleTreeList",
+                        RequestMethod = "GET",
+                        ACL = "GetModuleTreeList",
+                        EnabledMark = true,
+                        Description = "获取模块树",
+                        CreatorTime = DateTime.Now,
+                        CreatorUserId = UserId,
+                    }).ExecuteCommand();
+                    DbContext.Db.Insertable<SysModuleAction>(new SysModuleAction()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        ModuleId = moduleModuleId,
+                        ActionName = "GetModuleTreeAuthList",
+                        RequestMethod = "GET",
+                        ACL = "GetModuleTreeAuthList",
+                        EnabledMark = true,
+                        Description = "获取权限模块树",
                         CreatorTime = DateTime.Now,
                         CreatorUserId = UserId,
                     }).ExecuteCommand();

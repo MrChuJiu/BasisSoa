@@ -1,4 +1,6 @@
-﻿using BasisSoa.Api.Jwt;
+﻿using AutoMapper;
+using BasisSoa.Api.Jwt;
+using BasisSoa.Service.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -26,10 +28,13 @@ namespace BasisSoa.Api.ApiWebSocket
 
         private static WebSocket socket;
 
+
         static async Task Acceptor(HttpContext context, Func<Task> n)
         {
             if (!context.WebSockets.IsWebSocketRequest)
                 return;
+
+
             CancellationToken ct = context.RequestAborted;
             socket = await context.WebSockets.AcceptWebSocketAsync();
 
@@ -38,7 +43,20 @@ namespace BasisSoa.Api.ApiWebSocket
             //添加Socket进集合 存在就取出 不存在就加入
             if (!_sockets.ContainsKey(tokenModel.Id))
             {
+                //用户第一次连接上来 给一个欢迎消息
                  _sockets.TryAdd(tokenModel.Id, socket);
+                NoticetemplateModule msg = new NoticetemplateModule();
+                msg.id = "0";
+                msg.title = "欢迎使用";
+                msg.read = false;
+                msg.status = "doing";
+                msg.type = "通知";
+                msg.description = "已成功连接WebSocket";
+                msg.avatar = "";
+                msg.creatorUserName = "系统";
+                msg.datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                msg.RecriverId = tokenModel.Id;
+                await SendStringAsync(socket, JsonConvert.SerializeObject(msg));
             }
             else {
                 if (_sockets[tokenModel.Id] != socket) {
@@ -54,12 +72,18 @@ namespace BasisSoa.Api.ApiWebSocket
         /// <summary>
         /// 消息处理
         /// </summary>
+        /// <param name="userId">链接人</param>
+        /// <param name="ct"></param>
         /// <returns></returns>
         static async Task EchoLoop(string userId, CancellationToken ct)
         {
             List<NoticetemplateModule> dummy;
             System.Net.WebSockets.WebSocket socketdummy;
-            //处理消息
+
+
+
+
+            //用户一旦登录进来开始处理数据  处理消息
             if (_socketMessages.ContainsKey(userId))
             {
                 List<NoticetemplateModule> msgs = _socketMessages[userId];
@@ -82,19 +106,17 @@ namespace BasisSoa.Api.ApiWebSocket
                 //处理数据
                 string response = await ReceiveStringAsync(socket, ct);
                 NoticetemplateModule msg = JsonConvert.DeserializeObject<NoticetemplateModule>(response);
-                msg.CreateTime = DateTime.Now;
+                msg.datetime = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss");
 
                 //是否有这个用户的消息池
-                if (!_socketMessages.ContainsKey(userId))
+                if (!_socketMessages.ContainsKey(msg.RecriverId))
                 {
-                    _socketMessages.TryAdd(userId, new List<NoticetemplateModule>());
+                    _socketMessages.TryAdd(msg.RecriverId, new List<NoticetemplateModule>());
                 }
                 //消息池加数据
-                _socketMessages[userId].Add(msg);
+                _socketMessages[msg.RecriverId].Add(msg);
 
 
-               
-              
                 //不停地去跑循环
                 foreach (var socket in _sockets)
                 {
@@ -105,17 +127,20 @@ namespace BasisSoa.Api.ApiWebSocket
                         {
                             _sockets.TryRemove(userId, out socketdummy);
                         }
-                        break;
+                        continue;
                     }
-                    if (socket.Key == msg.RecriverId || socket.Key == userId)
-                    {
-                        await SendStringAsync(socket.Value, JsonConvert.SerializeObject(msg), ct);
+
+                    //循环当前socket的人有没有数据需要接受
+                    foreach (var item in _socketMessages[socket.Key].ToList()) {
+                        //寻找当前链接人有没有消息
+                        await SendStringAsync(socket.Value, JsonConvert.SerializeObject(item), ct);
+
                     }
+
+                   
                 }
 
             }
-
-
 
         }
         /// <summary>
@@ -166,6 +191,22 @@ namespace BasisSoa.Api.ApiWebSocket
             }
         }
 
+        //private static async void InitsocketMessage()
+        //{
+        //    List<NoticetemplateModule> msgList = _mapper.Map<List<NoticetemplateModule>>(await _sysMessageService.QuerySysMessageAllAsync());
+        //    foreach (var msg in msgList) {
+ 
+        //        //是否有这个用户的消息池
+        //        if (!_socketMessages.ContainsKey(msg.RecriverId))
+        //        {
+        //            _socketMessages.TryAdd(msg.RecriverId, new List<NoticetemplateModule>());
+        //        }
+        //        //消息池加数据
+        //        _socketMessages[msg.RecriverId].Add(msg);
+        //    }
+
+        //}
+
         /// <summary>
         /// 路由绑定处理
         /// </summary>
@@ -174,6 +215,7 @@ namespace BasisSoa.Api.ApiWebSocket
         {
             app.UseWebSockets();
             app.Use(NoticeHandler.Acceptor);
+
         }
     }
 }

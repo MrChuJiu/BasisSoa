@@ -12,7 +12,7 @@ namespace BasisSoa.Api.ApiWebSocket
         /// <summary>
         /// 主键
         /// </summary>
-        public string SenderId { get; set; }
+        public string id { get; set; }
         /// <summary>
         /// 标题
         /// </summary>
@@ -22,30 +22,39 @@ namespace BasisSoa.Api.ApiWebSocket
         /// </summary>
         public string avatar { get; set; }
         /// <summary>
-        /// 消息类型
+        /// 消息类型 暂定（1通知、待办、3聊天）
         /// </summary>
         public string type { get; set; }
         /// <summary>
         /// 说明
         /// </summary>
-        public string datetime { get; set; }
+        public string description { get; set; }
         /// <summary>
-        /// 着急状态
+        /// 着急情况待办用流程 （0未开始、1进行中、2马上到期、3已完成） 
+        /// </summary>
+        public string extra { get; set; }
+        /// <summary>
+        /// 就是个颜色
         /// </summary>
         public string status { get; set; }
         /// <summary>
+        /// 是否已读
+        /// </summary>
+        public bool read { get; set; }
+        /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime CreateTime { get; set; }
+        public string datetime { get; set; }
+
         /// <summary>
         /// 创建人
         /// </summary>
-        public string CreateName { get; set; }
+        public string creatorUserName { get; set; }
 
         /// <summary>
         /// 接收人Id
         /// </summary>
-        public string RecriverId  { get; set; }
+        public string RecriverId { get; set; }
 
 }
 }

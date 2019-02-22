@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BasisSoa.Api.ApiWebSocket;
 using BasisSoa.Api.ViewModels.Sys;
 using BasisSoa.Api.ViewModels.Sys.SysOrganize;
 using BasisSoa.Api.ViewModels.Sys.SysRole;
@@ -43,6 +44,9 @@ namespace BasisSoa.Api.AutoMapper
             CreateMap<EditSysModuleActionDto, SysModuleAction>();
             CreateMap<DetailsSysModuleActionDto, SysModuleAction>();
 
+
+            //消息模块配置
+            CreateMap<NoticeHandler,SysMessage>();
         }
     }
 }

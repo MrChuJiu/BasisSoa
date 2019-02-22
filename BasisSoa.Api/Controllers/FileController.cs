@@ -60,7 +60,7 @@ namespace BasisSoa.Api.Controllers
                                 break;
                         }
 
-                        var path = Path.Combine(Directory.GetCurrentDirectory(), new_path);
+                        var path = Path.Combine(AppContext.BaseDirectory, new_path);
                         using (var stream = new FileStream(path, FileMode.Create))
                         {
                            //再把文件保存的文件夹中

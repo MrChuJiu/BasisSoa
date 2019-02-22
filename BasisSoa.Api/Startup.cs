@@ -46,6 +46,7 @@ namespace BasisSoa.Api
         {
 
             #region 依赖注入
+            services.AddScoped<NoticeHandler>();
             services.AddScoped<BasisSoa.Core.BaseDbInit>();
             services.AddScoped<BasisSoa.Core.BaseDbContext>();
             //系统
@@ -60,6 +61,7 @@ namespace BasisSoa.Api
             services.AddTransient<ISysRoleAuthorizeService, SysRoleAuthorizeService>();
             services.AddTransient<ISysRoleAuthorizeActionService, SysRoleAuthorizeActionService>();
 
+            services.AddTransient<ISysMessageService, SysMessageService>();
             #endregion
 
 
@@ -260,7 +262,7 @@ namespace BasisSoa.Api
             #region 配置静态资源
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Uploads/HeadImage")),
+                FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(System.IO.Path.Combine(AppContext.BaseDirectory, "Uploads/HeadImage")),
                 RequestPath = "/Uploads/HeadImage"
             });
             #endregion

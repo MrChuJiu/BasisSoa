@@ -12,6 +12,7 @@ using BasisSoa.Common.EnumHelper;
 using BasisSoa.Common.TreeHelper;
 using BasisSoa.Core.Model.Sys;
 using BasisSoa.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BasisSoa.Api.Controllers.SysAdmin
