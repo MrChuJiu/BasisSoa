@@ -8,6 +8,7 @@ using BasisSoa.Service.Interfaces;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using StackExchange.Profiling;
 
 namespace BasisSoa.Api.Controllers
 {
@@ -25,6 +26,11 @@ namespace BasisSoa.Api.Controllers
         [HttpGet]
         public ActionResult<string> Get(int id)
         {
+            using (MiniProfiler.Current.Step("开始加载数据："))
+            {
+
+               MiniProfiler.Current.Step("请求完成");
+            }
             //Console.Out.WriteLineAsync("Greetings from Job!");
             //var client = new BackgroundJobClient();
             //client.Enqueue(() => Console.WriteLine("Easy!"));

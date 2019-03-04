@@ -90,24 +90,33 @@ namespace BasisSoa.Api
 
             #endregion
 
-
-            //跨域设置
+            #region 跨域设置
             services.AddCors();
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             });
             services.AddMvc();
+            #endregion
 
- 
-            //添加服务
+            #region MiniProfiler请求时间性能检测框架
+            services.AddMiniProfiler(options =>
+            {
+                options.RouteBasePath = "/profiler";//注意这个路径要和下边 index.html 脚本配置中的一致，
+                (options.Storage as MemoryCacheStorage).CacheDuration = TimeSpan.FromMinutes(10);
+
+            });
+            #endregion
+
+            #region AutoMapper服务
             services.AddAutoMapper();
             //启动配置
             AutoMapperConfig.RegisterMappings();
+            #endregion
 
-            //全局错误日志记录Log4
+            #region 全局错误日志记录Log4只能记录Action层 Server层暂时不行
             services.AddSingleton<ILoggerHelper, LogHelper>();
-
+            #endregion
 
             #region 定时任务  Hangfire
             services.AddHangfire(r => r.UseSqlServerStorage(Configuration["ConnectionStrings:DefaultConnection"]));
@@ -126,20 +135,6 @@ namespace BasisSoa.Api
             });//注册ISchedulerFactory的实例。
             services.AddHostedService<QuartzService>();
             #endregion
-
-            //接口时间分析
-            services.AddMiniProfiler(options =>
-            {
-                options.RouteBasePath = "/profiler";//注意这个路径要和下边 index.html 脚本配置中的一致，
-                (options.Storage as MemoryCacheStorage).CacheDuration = TimeSpan.FromMinutes(10);
-
-            });
-
-
-            services.AddMvc(o =>
-              o.Filters.Add(typeof(GlobalExceptionsFilter)) //注入全局异常捕获
-            ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddHostedService<HangfireService>();
 
             #region Swagger UI
             services.AddSwaggerGen(options =>
@@ -228,7 +223,6 @@ namespace BasisSoa.Api
             });
             #endregion
 
-
             #region JWT Token Service
             //读取配置文件
             var audienceConfig = Configuration["JwtAuth:Audience"];
@@ -292,7 +286,6 @@ namespace BasisSoa.Api
 
             #endregion
 
-
             #region 缓存 读取配置是否使用哪种缓存模式
             services.AddMemoryCache();
             if (Convert.ToBoolean(Configuration["Cache:IsUseRedis"]))
@@ -304,6 +297,7 @@ namespace BasisSoa.Api
                 services.AddSingleton<ICacheService, MemoryCacheService>();
             }
             #endregion
+
             #region 缓存 RedisCache
             //将Redis分布式缓存服务添加到服务中
             services.AddDistributedRedisCache(options =>
@@ -318,6 +312,11 @@ namespace BasisSoa.Api
             #region 性能 压缩
             services.AddResponseCompression();
             #endregion
+
+            services.AddMvc(o =>
+              o.Filters.Add(typeof(GlobalExceptionsFilter)) //注入全局异常捕获
+             ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddHostedService<HangfireService>();
         }
 
         /// <summary>
@@ -337,12 +336,8 @@ namespace BasisSoa.Api
                 app.UseHsts();
             }
 
-
-            app.Map("/ApiWebSocket", NoticeHandler.Map);
-
-         
-
-            //#region 缓存
+            
+            #region 缓存
             //lifetime.ApplicationStarted.Register(() =>
             //{
             //    var currentTimeUTC = DateTime.UtcNow.ToString();
@@ -351,12 +346,9 @@ namespace BasisSoa.Api
             //        .SetSlidingExpiration(TimeSpan.FromSeconds(20));
             //    cache.Set("cachedTimeUTC", encodedCurrentTimeUTC, options);
             //});
-            //#endregion
+            #endregion
 
-
-          
-
-            //Swagger UI
+            #region Swagger UI
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -365,26 +357,37 @@ namespace BasisSoa.Api
                 c.DocumentTitle = "BasisSoa.Api 在线文档调试";
 
                 // 将swagger首页，设置成我们自定义的页面，记得这个字符串的写法：解决方案名.index.html
-                //c.IndexStream = () => GetType().GetTypeInfo().Assembly.GetManifestResourceStream("BasisSoa.Api.index.html");
+                c.IndexStream = () => GetType().GetTypeInfo().Assembly.GetManifestResourceStream("BasisSoa.Api.index.html");
             });
-            //认证
+            #endregion
+
+            #region WebSocket
+            app.Map("/ApiWebSocket", NoticeHandler.Map);
+            #endregion
+
+            #region http请求认证
             app.UseAuthentication();
             app.UseCors("AllowAll");
             app.UseHttpsRedirection();
+            #endregion
 
-            //性能压缩
+            #region 性能压缩
             app.UseResponseCompression();
+            #endregion
 
-            //定时任务
+            #region MiniProfiler请求时间性能检测框架
+            app.UseMiniProfiler();
+            app.UseStaticFiles();
+            #endregion
+
+            #region 定时任务 Hangfire
             var jobOption = new BackgroundJobServerOptions
             {
                 WorkerCount = 5//并发数
             };
             app.UseHangfireServer(jobOption);
             app.UseHangfireDashboard();
-
-            //接口时间分析
-            app.UseMiniProfiler();
+            #endregion
 
             #region 配置静态资源
             app.UseStaticFiles(new StaticFileOptions
