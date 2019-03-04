@@ -30,6 +30,7 @@ namespace BasisSoa.Api.Controllers
             //client.Enqueue(() => Console.WriteLine("Easy!"));
             //client.Delay(() => Console.WriteLine("Reliable!"), TimeSpan.FromMinutes(1));
             //RecurringJob.AddOrUpdate("Time_Log", () => Console.WriteLine("12"), Cron.MinuteInterval(1));
+            //throw new Exception("测试异常抓取");
             return "value";
         }
 

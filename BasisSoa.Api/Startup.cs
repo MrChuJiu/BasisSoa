@@ -35,6 +35,13 @@ using BasisSoa.Api.QuartzTask;
 using BasisSoa.Api.QuartzTask.TimingTask;
 using Quartz;
 using Quartz.Impl;
+using StackExchange.Profiling.Storage;
+using System.Reflection;
+using log4net.Repository;
+using log4net.Config;
+using log4net;
+using BasisSoa.Api.Log;
+using BasisSoa.Api.Filter;
 
 namespace BasisSoa.Api
 {
@@ -43,9 +50,17 @@ namespace BasisSoa.Api
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            //log4net
+            repository = LogManager.CreateRepository("");//需要获取日志的仓库名，也就是你的当然项目名
+                                                         //指定配置文件
+            XmlConfigurator.Configure(repository, new FileInfo("log4net.config"));//配置文件
         }
 
         public IConfiguration Configuration { get; }
+        /// <summary>
+        /// log4net 仓储库
+        /// </summary>
+        public static ILoggerRepository repository { get; set; }
 
         /// <summary>
         ///  This method gets called by the runtime. Use this method to add services to the container.
@@ -90,6 +105,10 @@ namespace BasisSoa.Api
             //启动配置
             AutoMapperConfig.RegisterMappings();
 
+            //全局错误日志记录Log4
+            services.AddSingleton<ILoggerHelper, LogHelper>();
+
+
             #region 定时任务  Hangfire
             services.AddHangfire(r => r.UseSqlServerStorage(Configuration["ConnectionStrings:DefaultConnection"]));
             #endregion
@@ -108,9 +127,18 @@ namespace BasisSoa.Api
             services.AddHostedService<QuartzService>();
             #endregion
 
+            //接口时间分析
+            services.AddMiniProfiler(options =>
+            {
+                options.RouteBasePath = "/profiler";//注意这个路径要和下边 index.html 脚本配置中的一致，
+                (options.Storage as MemoryCacheStorage).CacheDuration = TimeSpan.FromMinutes(10);
+
+            });
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(o =>
+              o.Filters.Add(typeof(GlobalExceptionsFilter)) //注入全局异常捕获
+            ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddHostedService<HangfireService>();
 
             #region Swagger UI
@@ -312,13 +340,7 @@ namespace BasisSoa.Api
 
             app.Map("/ApiWebSocket", NoticeHandler.Map);
 
-            #region 配置静态资源
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(System.IO.Path.Combine(AppContext.BaseDirectory, "Uploads/HeadImage")),
-                RequestPath = "/Uploads/HeadImage"
-            });
-            #endregion
+         
 
             //#region 缓存
             //lifetime.ApplicationStarted.Register(() =>
@@ -341,6 +363,9 @@ namespace BasisSoa.Api
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "BasisSoa API V1");
                 // Other
                 c.DocumentTitle = "BasisSoa.Api 在线文档调试";
+
+                // 将swagger首页，设置成我们自定义的页面，记得这个字符串的写法：解决方案名.index.html
+                //c.IndexStream = () => GetType().GetTypeInfo().Assembly.GetManifestResourceStream("BasisSoa.Api.index.html");
             });
             //认证
             app.UseAuthentication();
@@ -358,9 +383,16 @@ namespace BasisSoa.Api
             app.UseHangfireServer(jobOption);
             app.UseHangfireDashboard();
 
+            //接口时间分析
+            app.UseMiniProfiler();
 
-
-
+            #region 配置静态资源
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(System.IO.Path.Combine(AppContext.BaseDirectory, "Uploads/HeadImage")),
+                RequestPath = "/Uploads/HeadImage"
+            });
+            #endregion
 
             app.UseMvc();
         }
