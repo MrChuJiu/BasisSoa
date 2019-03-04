@@ -13,6 +13,11 @@ namespace BasisSoa.Service.Implements
 {
     public class SysRoleAuthorizeService : BaseServer<SysRoleAuthorize>, ISysRoleAuthorizeService
     {
+        private readonly Common.Cache.ICacheService _cacheService;
+        public SysRoleAuthorizeService(Common.Cache.ICacheService cacheServicee) {
+            _cacheService = cacheServicee;
+
+        } 
         /// <summary>
         /// 获取当前系统所有用户的登录权限和接口访问权限
         /// </summary>
@@ -20,7 +25,11 @@ namespace BasisSoa.Service.Implements
         public async Task<List<RequestApiAuth>> GetRoleModule()
         {
             List<RequestApiAuth> res = new List<RequestApiAuth>();
-
+            //先读缓存
+            if (_cacheService.Exists(Common.Cache.CacheKey.SYSROLEMANAGE))
+            {
+                res = _cacheService.GetCache<List<RequestApiAuth>>(Common.Cache.CacheKey.SYSROLEMANAGE);
+            }
             res = await Db.Queryable<SysRoleAuthorize, SysRole, SysModule, SysRoleAuthorizeAction, SysModuleAction>
                                     ((sra, sr,sm,sraa,sma) => new object[] {
                                       JoinType.Left,sra.RoleId == sr.Id,
@@ -35,6 +44,8 @@ namespace BasisSoa.Service.Implements
                                         RequestMethod = sma.RequestMethod,
                                         ActionName = sma.ActionName
                                     }).ToListAsync();
+            //加入到缓存
+            _cacheService.SetCache(Common.Cache.CacheKey.SYSROLEMANAGE, res, DateTimeOffset.Now.AddMonths(5));
 
             return res;
         }

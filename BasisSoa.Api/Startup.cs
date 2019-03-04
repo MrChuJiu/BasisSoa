@@ -26,6 +26,15 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
+using BasisSoa.Common.Cache;
+using Microsoft.Extensions.Caching.Distributed;
+using Hangfire;
+using BasisSoa.Api.Hangfire;
+using Quartz.Spi;
+using BasisSoa.Api.QuartzTask;
+using BasisSoa.Api.QuartzTask.TimingTask;
+using Quartz;
+using Quartz.Impl;
 
 namespace BasisSoa.Api
 {
@@ -49,6 +58,7 @@ namespace BasisSoa.Api
             services.AddScoped<NoticeHandler>();
             services.AddScoped<BasisSoa.Core.BaseDbInit>();
             services.AddScoped<BasisSoa.Core.BaseDbContext>();
+
             //系统
             services.AddTransient<ISysLogService, SysLogService>();
             services.AddTransient<ISysUserService, SysUserService>();
@@ -62,6 +72,7 @@ namespace BasisSoa.Api
             services.AddTransient<ISysRoleAuthorizeActionService, SysRoleAuthorizeActionService>();
 
             services.AddTransient<ISysMessageService, SysMessageService>();
+
             #endregion
 
 
@@ -73,14 +84,34 @@ namespace BasisSoa.Api
             });
             services.AddMvc();
 
+ 
             //添加服务
             services.AddAutoMapper();
             //启动配置
             AutoMapperConfig.RegisterMappings();
-       
+
+            #region 定时任务  Hangfire
+            services.AddHangfire(r => r.UseSqlServerStorage(Configuration["ConnectionStrings:DefaultConnection"]));
+            #endregion
+
+            #region 定时任务  Quart
+            services.AddSingleton<IJobFactory, JobFactorys>();
+            services.AddTransient<LogJob>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();//注册ISchedulerFactory的实例。
+            services.AddSingleton(p => {
+
+                var sf = new StdSchedulerFactory();
+                var scheduler = sf.GetScheduler().Result;
+                scheduler.JobFactory = p.GetService<IJobFactory>();
+                return scheduler;
+            });//注册ISchedulerFactory的实例。
+            services.AddHostedService<QuartzService>();
+            #endregion
+
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            services.AddHostedService<HangfireService>();
 
             #region Swagger UI
             services.AddSwaggerGen(options =>
@@ -234,9 +265,31 @@ namespace BasisSoa.Api
             #endregion
 
 
+            #region 缓存 读取配置是否使用哪种缓存模式
+            services.AddMemoryCache();
+            if (Convert.ToBoolean(Configuration["Cache:IsUseRedis"]))
+            {
+                services.AddSingleton<ICacheService, RedisCacheService>();
+            }
+            else
+            {
+                services.AddSingleton<ICacheService, MemoryCacheService>();
+            }
+            #endregion
+            #region 缓存 RedisCache
+            //将Redis分布式缓存服务添加到服务中
+            services.AddDistributedRedisCache(options =>
+            {
+                //用于连接Redis的配置 
+                options.Configuration = "localhost";// Configuration.GetConnectionString("RedisConnectionString");
+                //Redis实例名RedisDistributedCache
+                options.InstanceName = "RedisInstance";
+            });
+            #endregion
 
-
-
+            #region 性能 压缩
+            services.AddResponseCompression();
+            #endregion
         }
 
         /// <summary>
@@ -244,7 +297,7 @@ namespace BasisSoa.Api
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime, IDistributedCache cache)
         {
             if (env.IsDevelopment())
             {
@@ -267,6 +320,20 @@ namespace BasisSoa.Api
             });
             #endregion
 
+            //#region 缓存
+            //lifetime.ApplicationStarted.Register(() =>
+            //{
+            //    var currentTimeUTC = DateTime.UtcNow.ToString();
+            //    byte[] encodedCurrentTimeUTC = Encoding.UTF8.GetBytes(currentTimeUTC);
+            //    var options = new DistributedCacheEntryOptions()
+            //        .SetSlidingExpiration(TimeSpan.FromSeconds(20));
+            //    cache.Set("cachedTimeUTC", encodedCurrentTimeUTC, options);
+            //});
+            //#endregion
+
+
+          
+
             //Swagger UI
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -280,10 +347,19 @@ namespace BasisSoa.Api
             app.UseCors("AllowAll");
             app.UseHttpsRedirection();
 
+            //性能压缩
+            app.UseResponseCompression();
 
-            //WebSocket的方式实现消息
-            //app.UseWebSockets();
-            //app.UseMiddleware<NoticeWebSocketMiddleware>();
+            //定时任务
+            var jobOption = new BackgroundJobServerOptions
+            {
+                WorkerCount = 5//并发数
+            };
+            app.UseHangfireServer(jobOption);
+            app.UseHangfireDashboard();
+
+
+
 
 
             app.UseMvc();
