@@ -50,7 +50,6 @@
 
   <ItemGroup>
     <Folder Include="Uploads\HeadImage\" />
-    <Folder Include="MiniFilter\" />
   </ItemGroup>
 
 </Project>

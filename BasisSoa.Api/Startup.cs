@@ -51,8 +51,7 @@ namespace BasisSoa.Api
         {
             Configuration = configuration;
             //log4net
-            repository = LogManager.CreateRepository("");//需要获取日志的仓库名，也就是你的当然项目名
-                                                         //指定配置文件
+            repository = LogManager.CreateRepository("");//需要获取日志的仓库名，也就是你的当然项目名 
             XmlConfigurator.Configure(repository, new FileInfo("log4net.config"));//配置文件
         }
 

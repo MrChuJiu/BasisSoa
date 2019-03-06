@@ -41,6 +41,6 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// <summary>
         /// 登录次数
         /// </summary>
-        public int LogOnCount { get; set; }
+        public int? LogOnCount { get; set; }
     }
 }

@@ -27,6 +27,7 @@ namespace BasisSoa.Api.Controllers.SysAdmin
         private readonly ISysModuleService _sysModuleService;
         private readonly ISysModuleActionService _sysModuleActionService;
         private readonly ISysRoleAuthorizeService _sysRoleAuthorizeService;
+        private readonly ISysRoleAuthorizeActionService _sysRoleAuthorizeActionService;
         private readonly IMapper _mapper;
 
         /// <summary>
@@ -34,10 +35,11 @@ namespace BasisSoa.Api.Controllers.SysAdmin
         /// </summary>
         /// <param name="sysModuleService"></param>
         /// <param name="mapper"></param>
-        public SysModuleController(ISysModuleService sysModuleService, ISysModuleActionService sysModuleActionService, ISysRoleAuthorizeService sysRoleAuthorizeService, ISysRoleService sysRoleService, IMapper mapper) {
+        public SysModuleController(ISysModuleService sysModuleService, ISysModuleActionService sysModuleActionService, ISysRoleAuthorizeService sysRoleAuthorizeService, ISysRoleAuthorizeActionService sysRoleAuthorizeActionService , ISysRoleService sysRoleService, IMapper mapper) {
             _sysModuleService = sysModuleService;
             _sysModuleActionService = sysModuleActionService;
             _sysRoleAuthorizeService = sysRoleAuthorizeService;
+            _sysRoleAuthorizeActionService = sysRoleAuthorizeActionService;
             _sysRoleService = sysRoleService;
             _mapper = mapper;
         }
@@ -157,6 +159,21 @@ namespace BasisSoa.Api.Controllers.SysAdmin
                     res.message = "错误：添加模块失败";
                 }
 
+                //添加模块权限
+                SysRoleAuthorize sysRoleAuthorize = new SysRoleAuthorize();
+                sysRoleAuthorize.Id = Guid.NewGuid().ToString();
+                sysRoleAuthorize.RoleId = token.Role;
+                sysRoleAuthorize.ModuleId = sysModuleInfo.Id;
+                sysRoleAuthorize.CreatorTime = DateTime.Now;
+                sysRoleAuthorize.CreatorUserId = token.Id;
+                IsSuccess = await _sysRoleAuthorizeService.AddAsync(sysRoleAuthorize);
+                if (!IsSuccess)
+                {
+                    res.code = (int)ApiEnum.Failure;
+                    res.message = "错误：添加模块权限失败";
+                }
+
+
                 //添加模块请求
                 List<SysModuleAction> AddsysModuleActionList = _mapper.Map<List<SysModuleAction>>(Params.SysModuleActionDtos.Where(s => s.Id == null));
                 if (AddsysModuleActionList.Count() > 0) {
@@ -171,11 +188,34 @@ namespace BasisSoa.Api.Controllers.SysAdmin
                     if (!IsSuccess)
                     {
                         res.code = (int)ApiEnum.Failure;
-                        res.message = "错误：添加模块失败";
+                        res.message = "错误：添加子模块失败";
                     }
 
+                 
+                    //添加模块权限 按钮权限
+                    List<SysRoleAuthorizeAction> AddsysRoleAuthorizeList = new List<SysRoleAuthorizeAction>();
+                    foreach (var item in AddsysModuleActionList)
+                    {
+                        SysRoleAuthorizeAction sysRoleAuthorizeInfo = new SysRoleAuthorizeAction();
+                        sysRoleAuthorizeInfo.Id = Guid.NewGuid().ToString();
+                        sysRoleAuthorizeInfo.RoleAuthId = sysRoleAuthorize.Id;
+                        sysRoleAuthorizeInfo.ModuleActionId = item.Id;
+                        sysRoleAuthorizeInfo.CreatorTime = DateTime.Now;
+                        sysRoleAuthorizeInfo.CreatorUserId = token.Id;
+                        AddsysRoleAuthorizeList.Add(sysRoleAuthorizeInfo);
+
+                    }
+                    IsSuccess = await _sysRoleAuthorizeActionService.AddListAsync(AddsysRoleAuthorizeList);
+                    if (!IsSuccess)
+                    {
+                        res.code = (int)ApiEnum.Failure;
+                        res.message = "错误：添加模块按钮权限失败";
+                    }
                 }
-              
+             
+
+
+
 
             } catch (Exception ex) {
                 res.code = (int)ApiEnum.Error;
@@ -203,9 +243,12 @@ namespace BasisSoa.Api.Controllers.SysAdmin
                     res.code = (int)ApiEnum.Failure;
                     res.message = "错误：修改模块失败";
                 }
+                //找到模块对应当前角色授权
+                SysRoleAuthorize sysRoleAuthorize = await _sysRoleAuthorizeService.QueryFirstAsync(s=>s.RoleId == token.Role && s.ModuleId == Id);
+               
+
 
                 List<string> ModuleIds = new List<string>();
-
                 //修改模块数据
                 List<SysModuleAction> EditsysModuleActionList = _mapper.Map<List<SysModuleAction>>(Params.SysModuleActionDtos.Where(s => s.Id != null));
                 if (EditsysModuleActionList.Count() > 0)
@@ -219,7 +262,6 @@ namespace BasisSoa.Api.Controllers.SysAdmin
                     ModuleIds.AddRange(EditsysModuleActionList.Select(s => s.Id).ToList());
                 }
              
-
                 //添加模块请求
                 List<SysModuleAction> AddsysModuleActionList = _mapper.Map<List<SysModuleAction>>(Params.SysModuleActionDtos.Where(s=>s.Id == null));
                 if (AddsysModuleActionList.Count() > 0)
@@ -238,6 +280,29 @@ namespace BasisSoa.Api.Controllers.SysAdmin
                         res.message = "错误：添加模块失败";
                     }
                     ModuleIds.AddRange(AddsysModuleActionList.Select(s => s.Id).ToList());
+
+ 
+                    //添加模块权限 按钮权限
+                    List<SysRoleAuthorizeAction> AddsysRoleAuthorizeList = new List<SysRoleAuthorizeAction>();
+                    foreach (var item in AddsysModuleActionList)
+                    {
+                        SysRoleAuthorizeAction sysRoleAuthorizeInfo = new SysRoleAuthorizeAction();
+                        sysRoleAuthorizeInfo.Id = Guid.NewGuid().ToString();
+                        sysRoleAuthorizeInfo.RoleAuthId = sysRoleAuthorize.Id;
+                        sysRoleAuthorizeInfo.ModuleActionId = item.Id;
+                        sysRoleAuthorizeInfo.CreatorTime = DateTime.Now;
+                        sysRoleAuthorizeInfo.CreatorUserId = token.Id;
+                        AddsysRoleAuthorizeList.Add(sysRoleAuthorizeInfo);
+
+                    }
+                    IsSuccess = await _sysRoleAuthorizeActionService.AddListAsync(AddsysRoleAuthorizeList);
+                    if (!IsSuccess)
+                    {
+                        res.code = (int)ApiEnum.Failure;
+                        res.message = "错误：添加模块按钮权限失败";
+                    }
+
+
                 }
 
                 //删除不存在的模块请求

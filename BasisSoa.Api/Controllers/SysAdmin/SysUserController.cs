@@ -10,6 +10,7 @@ using BasisSoa.Common;
 using BasisSoa.Common.ClientData;
 using BasisSoa.Common.EncryptionHelper;
 using BasisSoa.Common.EnumHelper;
+using BasisSoa.Common.LambdaHelper;
 using BasisSoa.Core.Model.Sys;
 using BasisSoa.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -45,13 +46,17 @@ namespace BasisSoa.Api.Controllers.SysAdmin
         /// 获取用户列表  PageSysUserDto
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public async Task<AngularSTResult<DetailsSysUserDto>> Get(int pi,int ps) {
-           
-          
+        [HttpPost("GetUserList")]
+        public async Task<AngularSTResult<DetailsSysUserDto>> Get(PageSysUserDto Params) {
+
+            //EditSysUserDto Params = new EditSysUserDto();
+            //Params.Email = "377749229@";
+            //Params.Tel = "321321";
+
             AngularSTResult<DetailsSysUserDto> res = new AngularSTResult<DetailsSysUserDto>();
-            //SearchClass<SysUser,EditSysUserDto>.GetWhereLambda(Params)
-            var userList = await _userService.UserQueryAsync(null,pi,ps,s=>s.CreatorTime,SqlSugar.OrderByType.Desc);
+            var seaechLambda = SearchClass<SysUser, EditSysUserDto, SysUser>.GetWhereLambda(Params);
+
+            var userList = await _userService.UserQueryAsync(seaechLambda, Params.pi, Params.ps, s=>s.CreatorTime,SqlSugar.OrderByType.Desc);
             res.list = _mapper.Map<List<DetailsSysUserDto>>(userList);
             return await Task.Run(() => res);
         }

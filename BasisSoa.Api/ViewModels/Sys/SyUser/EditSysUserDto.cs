@@ -1,4 +1,5 @@
 ﻿
+using BasisSoa.Common.LambdaHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// <summary>
         /// 登录账号
         /// </summary>
-        //[SearchAttribute("Account", Symbol.等于)]
+        [SearchAttribute("Account", Symbol.等于)]
         public string Account { get; set; }
         /// <summary>
         /// 角色ID
@@ -34,6 +35,7 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// <summary>
         /// 手机号
         /// </summary>
+        [SearchAttribute("Tel", Symbol.相似)]
         public string Tel { get; set; }
         /// <summary>
         /// 生日
@@ -46,6 +48,7 @@ namespace BasisSoa.Api.ViewModels.Sys
         /// <summary>
         /// 邮箱
         /// </summary>
+        [SearchAttribute("Email", Symbol.相似)]
         public string Email { get; set; }
 
         /// <summary>
